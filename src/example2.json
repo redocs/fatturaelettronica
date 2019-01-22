@@ -1,0 +1,63 @@
+{
+    "P:FatturaElettronica": {
+        "-xmlns:P": "http://ivaservizi.agenziaentrate.gov.it/docs/xsd/fatture/v1.2",
+        "-xmlns:ds": "http://www.w3.org/2000/09/xmldsig#",
+        "-xmlns:xsi": "http://www.w3.org/2001/XMLSchema-instance",
+        "-versione": "FPR12",
+        FatturaElettronicaHeader: {
+            DatiTrasmissione: {
+                IdTrasmittente: {
+                    IdPaese: "IT",
+                    IdCodice: "02448510046"
+                },
+                ProgressivoInvio: "0",
+                FormatoTrasmissione: "FPR12",
+                CodiceDestinatario: "KRRH6B9",
+                ContattiTrasmittente: {
+                    Telefono: "0289202682",
+                    Email: "milano@tesisquare.com"
+                }
+            },
+            CedentePrestatore: {
+                DatiAnagrafici: {
+                    IdFiscaleIVA: {
+                        IdPaese: "IT",
+                        IdCodice: "02630120166"
+                    },
+                    Anagrafica: {
+                        Denominazione: "MediaMarket S.p.A. con Socio Unico"
+                    },
+                    RegimeFiscale: "RF01"
+                },
+                Sede: {
+                    Indirizzo: "via Enrico Fermi",
+                    CAP: "24035",
+                    Comune: "Curno",
+                    Provincia: "BG",
+                    Nazione: "IT"
+                },
+                Contatti: {
+                    Telefono: "0354513111"
+                }
+            },
+            CessionarioCommittente: {
+                DatiAnagrafici: {
+                    IdFiscaleIVA: {
+                        IdPaese: "IT",
+                        IdCodice: "02121290973"
+                    },
+                    Anagrafica: {
+                        Denominazione: "LEONARDO LENZI"
+                    }
+                },
+                Sede: {
+                    Indirizzo: "VIA REGINALDO GIULIANI 100",
+                    CAP: "50141",
+                    Comune: "FIRENZE",
+                    Provincia: "FI",
+                    Nazione: "IT"
+                }
+            }
+        }
+    }
+}

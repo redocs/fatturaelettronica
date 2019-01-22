@@ -1,0 +1,5 @@
+<Example name="simple">
+    <Item i="1">one</Item>
+    <Item>two</Item>
+    <Item>three</Item>
+</Example>
