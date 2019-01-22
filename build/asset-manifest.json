@@ -1,13 +1,13 @@
 {
-  "main.css": "/static/css/main.b308bd58.chunk.css",
-  "main.js": "/static/js/main.aaa3ed32.chunk.js",
-  "main.js.map": "/static/js/main.aaa3ed32.chunk.js.map",
-  "static/js/1.b96031d1.chunk.js": "/static/js/1.b96031d1.chunk.js",
-  "static/js/1.b96031d1.chunk.js.map": "/static/js/1.b96031d1.chunk.js.map",
-  "runtime~main.js": "/static/js/runtime~main.229c360f.js",
-  "runtime~main.js.map": "/static/js/runtime~main.229c360f.js.map",
-  "static/css/main.b308bd58.chunk.css.map": "/static/css/main.b308bd58.chunk.css.map",
-  "index.html": "/index.html",
-  "precache-manifest.3b3982d27a71ff782113f366613abd27.js": "/precache-manifest.3b3982d27a71ff782113f366613abd27.js",
-  "service-worker.js": "/service-worker.js"
+  "main.css": "/fatturaelettronica/static/css/main.b308bd58.chunk.css",
+  "main.js": "/fatturaelettronica/static/js/main.7680e673.chunk.js",
+  "main.js.map": "/fatturaelettronica/static/js/main.7680e673.chunk.js.map",
+  "static/js/1.4ae45b90.chunk.js": "/fatturaelettronica/static/js/1.4ae45b90.chunk.js",
+  "static/js/1.4ae45b90.chunk.js.map": "/fatturaelettronica/static/js/1.4ae45b90.chunk.js.map",
+  "runtime~main.js": "/fatturaelettronica/static/js/runtime~main.ab3ddb9d.js",
+  "runtime~main.js.map": "/fatturaelettronica/static/js/runtime~main.ab3ddb9d.js.map",
+  "static/css/main.b308bd58.chunk.css.map": "/fatturaelettronica/static/css/main.b308bd58.chunk.css.map",
+  "index.html": "/fatturaelettronica/index.html",
+  "precache-manifest.4268e295b9160fbcff31eec67ac06bd6.js": "/fatturaelettronica/precache-manifest.4268e295b9160fbcff31eec67ac06bd6.js",
+  "service-worker.js": "/fatturaelettronica/service-worker.js"
 }
