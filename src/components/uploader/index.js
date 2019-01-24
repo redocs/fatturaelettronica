@@ -13,6 +13,9 @@ const UploaderContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  @media (max-width: 700px) {
+    width: 80vw;
+  }
 `;
 
 class Uploader extends Component {
