@@ -1,28 +1,23 @@
 import React, { Component } from 'react';
-//import json from './../../example.json';
 import styled from 'styled-components';
+import FattHeader from './fattHeader';
+import FattBody from './fattBody';
+import FattFooter from './fattFooter';
 
-const ViewerDiv = styled.div``;
-const ViewerContainer = styled.div`
+const ViewerDiv = styled.div`
   max-width: 1200px;
   width: 100%;
   margin: 0 auto;
   padding: 0;
 `;
-const FattHeader = styled.div`
-  display: flex;
-`;
-const FattTitle = styled.h2`
-  margin: 0 0 5px;
-`;
-const Col = styled.div`
-  flex: 1;
-  text-align: ${props => (props.right ? 'right' : 'left')};
-`;
-const ColUl = styled.ul`
-  margin: 0;
-  padding: 0;
-  list-style-type: none;
+const ViewerContainer = styled.div`
+  padding: 20px;
+  box-shadow: 0px 5px 10px 1px #ccc;
+  margin-top: 20px;
+  @media print {
+    box-shadow: none;
+    margin: 0;
+  }
 `;
 
 class Viewer extends Component {
@@ -30,55 +25,25 @@ class Viewer extends Component {
     super(props);
 
     this.state = {
-      isLoading: false,
       file: this.props.file
     };
   }
 
-  componentDidMount() {
-    this.setState({
-      isLoading: true,
-      file: this.props.file
-    });
-    //console.log(json);
-  }
+  // componentDidMount() {
+  //   this.setState({
+  //     isLoading: true
+  //   });
+  // }
 
   render() {
-    const json = this.props.file;
-    //console.log(json);
-    const fatturaHeader = json['P:FatturaElettronica'].FatturaElettronicaHeader;
-    const cedente = fatturaHeader.CedentePrestatore;
-    const cedenteIVA =
-      cedente.DatiAnagrafici.IdFiscaleIVA.IdPaese +
-      cedente.DatiAnagrafici.IdFiscaleIVA.IdCodice;
+    const fileResult = this.props.file;
+    console.log(fileResult);
     return (
       <ViewerDiv>
         <ViewerContainer>
-          <FattHeader>
-            <Col>
-              <FattTitle>DATI CEDENTE/PRESTATORE</FattTitle>
-              <ColUl>
-                <li>{cedente.DatiAnagrafici.Anagrafica.Denominazione}</li>
-                <li>P. IVA: {cedenteIVA}</li>
-                <li>{cedente.Sede.Indirizzo}</li>
-                <li>
-                  {cedente.Sede.CAP} - {cedente.Sede.Comune} (
-                  {cedente.Sede.Provincia}) - {cedente.Sede.Nazione}
-                </li>
-                <li>Tel: {cedente.Contatti.Telefono}</li>
-              </ColUl>
-            </Col>
-            <Col>
-              <FattTitle>DATI DOCUMENTO</FattTitle>
-            </Col>
-            <Col right>
-              <FattTitle>DATI CLIENTE</FattTitle>
-              <ColUl>
-                <li>{fatturaHeader.DatiTrasmissione.CodiceDestinatario}</li>
-              </ColUl>
-            </Col>
-          </FattHeader>
-        </ViewerContainer>
+          <FattHeader json={fileResult} /> <FattBody json={fileResult} />{' '}
+          <FattFooter json={fileResult} />{' '}
+        </ViewerContainer>{' '}
       </ViewerDiv>
     );
   }
