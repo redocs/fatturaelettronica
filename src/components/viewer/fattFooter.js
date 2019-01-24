@@ -70,12 +70,14 @@ class FattFooter extends Component {
           <Col>
             <FattTitle> CALCOLI </FattTitle>
             <ColUl>
-              <ColLi>
-                <Span>Totale Documento:</Span>
-                <Span right>
-                  {datiDocumento.ImportoTotaleDocumento} {valutaFatt}
-                </Span>
-              </ColLi>
+              {datiDocumento.ImportoTotaleDocumento && (
+                <ColLi>
+                  <Span>Totale Documento:</Span>
+                  <Span right>
+                    {datiDocumento.ImportoTotaleDocumento} {valutaFatt}
+                  </Span>
+                </ColLi>
+              )}
             </ColUl>
           </Col>
         </Footer>
