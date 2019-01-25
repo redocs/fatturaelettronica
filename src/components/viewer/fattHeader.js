@@ -34,13 +34,13 @@ class FattHeader extends Component {
     return (
       <FattHeading>
         <Col>
-          <FattTitle> DATI CEDENTE / PRESTATORE </FattTitle>{' '}
+          <FattTitle> DATI CEDENTE / PRESTATORE </FattTitle>
           <InfoAzienda info={cedente} />
         </Col>
         <Col>
-          <FattTitle> DATI DOCUMENTO </FattTitle>{' '}
+          <FattTitle> DATI DOCUMENTO </FattTitle>
           <DatiDocumento info={datiDocumento} />
-        </Col>{' '}
+        </Col>
         <Col right>
           <FattTitle> DATI CLIENTE </FattTitle>
           {/* < li > {

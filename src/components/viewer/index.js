@@ -37,13 +37,14 @@ class Viewer extends Component {
 
   render() {
     const fileResult = this.props.file;
-    console.log(fileResult);
+    //console.log(fileResult);
     return (
       <ViewerDiv>
         <ViewerContainer>
-          <FattHeader json={fileResult} /> <FattBody json={fileResult} />{' '}
-          <FattFooter json={fileResult} />{' '}
-        </ViewerContainer>{' '}
+          <FattHeader json={fileResult} />
+          <FattBody json={fileResult} />
+          <FattFooter json={fileResult} />
+        </ViewerContainer>
       </ViewerDiv>
     );
   }
