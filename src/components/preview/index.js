@@ -1,106 +1,269 @@
 import React, { Component } from 'react';
-import styled from 'styled-components';
-import { selectProperty, correctData } from '../../helpers';
+import styled, { css } from 'styled-components';
+import OrderBy from './orderby';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faTimesCircle,
+  faCaretRight,
+  faCaretLeft,
+  faFileInvoice
+} from '@fortawesome/free-solid-svg-icons';
+
+library.add(faTimesCircle);
+library.add(faCaretRight);
+library.add(faCaretLeft);
+library.add(faFileInvoice);
 
 const PreviewContainer = styled.ul`
   margin: 0;
   padding: 0;
-  border-top: 2px solid #333;
+  border-top: 2px solid #fff;
 `;
 
 const Header = styled.div`
   display: flex;
-  margin: 0 10px 10px;
+  margin: 6px;
 `;
 
 const Col = styled.div`
-  flex: 1;
+  flex: ${props => (props.flex ? props.flex : '1')};
   display: flex;
   justify-content: ${props => props.justifyContent};
   align-items: center;
 `;
 
+const ColMini = styled(Col)``;
+
 const Button = styled.button`
-  padding: 6px 12px;
+  padding: ${props => (props.icon ? '3px 20px;' : '8px 20px')};
+  ${props => (props.icon ? 'font-size: 20px;' : '')}
   border: 1px solid #333;
   border-radius: 4px;
   cursor: pointer;
+  text-transform: uppercase;
+  font-weight: bolder;
+
+  &:focus {
+    outline: none;
+    box-shadow: 0px 0px 0px 2px #333;
+  }
 `;
 
 const Pitem = styled.li`
   margin: 0;
   padding: 5px;
-  border-bottom: 2px solid #333;
+  border-bottom: 2px solid #fff;
   line-height: 33px;
   display: flex;
   justify-content: space-between;
+  background: ${props => (props.active ? '#333' : '#585858')};
+`;
+
+const PitemSpan = styled.span`
+  display: flex;
+  justify-content: ${props => props.justifyContent};
+  width: ${props => props.width};
+  text-align: ${props => props.textAlign};
+  ${props => (props.flex ? 'flex: ' + props.flex : '')}
+  ${props => (props.clickable ? 'cursor: pointer;' : '')}
+`;
+
+const PitemSpanValue = styled(PitemSpan)``;
+
+const PitemSpanName = styled(PitemSpan)`
+  width: 150px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: inline-block;
+  flex: none;
+`;
+
+const PitemSpanMini = styled(PitemSpan)``;
+
+const PitemSpanMinimize = styled.span`
+  display: none;
+  flex-direction: column;
+  flex: 1;
+  align-items: center;
+  padding: 10px;
+  border: 1px solid #fff;
+  margin: 3px;
+  line-height: 1.1;
   cursor: pointer;
-  background: ${props => (props.active ? '#f4f4f4' : 'white')};
+
+  > span {
+    display: block;
+    margin: 0 0 8px;
+  }
+`;
+
+const PitemButton = styled.span`
+  display: flex;
+  justify-content: ${props => props.justifyContent};
+  width: ${props => props.width};
+  text-align: ${props => props.textAlign};
+  ${props => (props.flex ? 'flex: ' + props.flex : '')}
+  align-items: center;
+  margin-left: 4px;
+  cursor: pointer;
 `;
 
 const TitleH2 = styled.h2`
   margin: 0;
   padding: 0;
+  font-size: 20px;
+`;
+
+const PreviewDiv = styled.div`
+  position: sticky;
+  top: 10px;
+
+  ${props =>
+    props.mini &&
+    css`
+      ${ColMini}, ${PitemButton}, ${PitemSpanMini} {
+        display: none;
+      }
+      ${Col} {
+        justify-content: center;
+      }
+      ${PitemSpanMinimize}{
+        display: flex;
+      }
+    `}
+
+  @media (max-width: 1200px) {
+    ${PitemSpanValue} {
+      display: none;
+    }
+  }
+
+  @media (max-width: 960px) {
+    ${ColMini}, ${PitemButton}, ${PitemSpanMini} {
+      display: none;
+    }
+    ${Col} {
+      justify-content: center;
+    }
+    ${PitemSpanMinimize}{
+      display: flex;
+    }
+  }
 `;
 
 class PreviewItem extends Component {
+  loadFile = file => {
+    //console.log('file', file);
+    this.props.onClick(file);
+  };
   render() {
-    const json = this.props.info;
-    const fattProperty = selectProperty(json);
-    const fatturaBody = json[fattProperty].FatturaElettronicaBody[0];
-    const fatturaHeader = json[fattProperty].FatturaElettronicaHeader;
-    const cedente = fatturaHeader[0].CedentePrestatore[0];
-    const datiDocumento = fatturaBody.DatiGenerali[0].DatiGeneraliDocumento[0];
+    const file = this.props.info;
 
-    const infoData = correctData(datiDocumento.Data);
-
-    //console.log(this.props.active);
+    const itemSpanConfig = {
+      textAlign: 'left',
+      width: 'auto',
+      flex: '2',
+      justifyContent: 'space-between'
+    };
 
     return (
-      <Pitem active={this.props.active} onClick={this.props.onClick}>
-        <span>{cedente.DatiAnagrafici[0].Anagrafica[0].Denominazione}</span>
-        <span>{infoData}</span>
-      </Pitem>
+      <PitemSpanMini
+        clickable
+        {...itemSpanConfig}
+        onClick={e => this.loadFile(file)}
+      >
+        {console.log(file)}
+        <PitemSpanName {...itemSpanConfig}>{file.name}</PitemSpanName>
+        {file.valueTot !== 0 && (
+          <PitemSpanValue
+            textAlign="right"
+            width="auto"
+            justifyContent="flex-end"
+          >
+            {file.valueTot} {file.valueCurrency}
+          </PitemSpanValue>
+        )}
+        <PitemSpan textAlign="right" width="auto" justifyContent="flex-end">
+          {file.dateDoc}
+        </PitemSpan>
+      </PitemSpanMini>
     );
   }
 }
 
 class Preview extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      active: this.props.fileActive
+    };
+  }
   loadFile = file => {
+    //console.log('file', file);
     this.props.onSelectedFile(file);
+  };
+  onClickRemove = index => {
+    this.props.onRemoveFile(index);
   };
   resetStore = () => {
     this.props.onResetStore();
   };
+  toggleSidebar = () => {
+    this.props.onToggleSidebar();
+  };
+  onSelectOrderBy = type => {
+    this.props.onSelectOrderBy(type);
+  };
   render() {
     const filesArray = this.props.files;
-    //console.log(this.props.fileActive);
-    // if (!filesArray) return false;
+
     return (
-      <div>
+      <PreviewDiv mini={this.props.isMini}>
         <Header>
-          <Col justifyContent="flex-start" />
-          <Col justifyContent="center">
+          <Col justifyContent="flex-start">
+            <Button icon onClick={e => this.toggleSidebar(e)}>
+              <FontAwesomeIcon
+                icon={this.props.isMini ? 'caret-left' : 'caret-right'}
+              />
+            </Button>
+          </Col>
+          <ColMini flex="2" justifyContent="center">
             <TitleH2>Lista Fatture</TitleH2>
-          </Col>
-          <Col justifyContent="flex-end">
+          </ColMini>
+          <ColMini justifyContent="flex-end">
             <Button onClick={e => this.resetStore(e)}>Reset</Button>
-          </Col>
+          </ColMini>
+        </Header>
+        <Header>
+          <ColMini justifyContent="flex-end">
+            <OrderBy onSelectOrderBy={e => this.onSelectOrderBy(e)} />
+          </ColMini>
         </Header>
         <PreviewContainer>
           {filesArray.map((file, i) => {
-            console.log(i);
+            //console.log(i);
             return (
-              <PreviewItem
-                active={this.props.fileActive === file}
-                key={i}
-                info={file}
-                onClick={e => this.loadFile(file)}
-              />
+              <Pitem key={i} active={this.props.fileActive === file}>
+                <PitemSpanMinimize onClick={e => this.loadFile(file)}>
+                  <span>{i + 1}</span>
+                  <FontAwesomeIcon size="lg" icon="file-invoice" />
+                </PitemSpanMinimize>
+                <PreviewItem info={file} onClick={e => this.loadFile(file)} />
+                <PitemButton
+                  textAlign="center"
+                  width="30px"
+                  justifyContent="center"
+                  onClick={e => this.onClickRemove(i)}
+                >
+                  <FontAwesomeIcon icon="times-circle" />
+                </PitemButton>
+              </Pitem>
             );
           })}
         </PreviewContainer>
-      </div>
+      </PreviewDiv>
     );
   }
 }

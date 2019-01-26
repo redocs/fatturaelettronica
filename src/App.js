@@ -4,7 +4,7 @@ import Viewer from './components/viewer';
 import Uploader from './components/uploader';
 import ErrorUpload from './components/uploader/errorUpload';
 import Preview from './components/preview';
-import { checkProperty } from './helpers';
+import { checkProperty, returnObject } from './helpers';
 import styled from 'styled-components';
 import './App.css';
 import ls from 'local-storage';
@@ -16,17 +16,15 @@ const FlexContainer = styled.div`
 
 const Col = styled.div`
   flex: ${props => props.flex};
-  ${props =>
-    props.shadowed
-      ? 'padding: 20px; box-shadow: 0px 5px 10px 1px #ccc; margin: 20px; 10px;'
-      : ''}
 `;
 
-const ColPreviewer = styled.div`
-  flex: ${props => props.flex};
-  padding: 20px 0;
-  box-shadow: 0px 5px 10px 1px #ccc;
-  margin: 20px 10px;
+const ColPreviewer = styled(Col)`
+  max-width: ${props => (props.mini ? '100px' : 'auto')}
+  padding: 0;
+  margin: 10px 10px 10px 5px;
+  background: #585858;
+  color: #fff;
+  border-radius: 4px;
   @media print {
     display: none;
   }
@@ -41,7 +39,8 @@ class App extends Component {
     this.state = {
       file: '',
       files: ls.get('files') || null,
-      isXML: true
+      isXML: true,
+      toggleSidebar: false
     };
   }
 
@@ -57,8 +56,59 @@ class App extends Component {
     });
     return resultFile;
   };
+  onRemoveFile = index => {
+    let oldFiles = this.state.files;
+    oldFiles.splice(index, 1);
+    //console.log('removed file', newFiles);
+    ls.set('files', oldFiles);
+    this.setState({
+      files: ls.get('files') || []
+    });
+  };
+  onSelectOrderBy = type => {
+    let arrayFiles = this.state.files;
+    if (type === 'dateASC') {
+      arrayFiles.sort(function(a, b) {
+        return a.dateDocTimestamp - b.dateDocTimestamp;
+      });
+    }
+    if (type === 'dateDESC') {
+      arrayFiles.sort(function(a, b) {
+        return b.dateDocTimestamp - a.dateDocTimestamp;
+      });
+    }
+    if (type === 'name') {
+      arrayFiles.sort(function(a, b) {
+        var nameA = a.name.toUpperCase(); // ignora maiuscole e minuscole
+        var nameB = b.name.toUpperCase(); // ignora maiuscole e minuscole
+        if (nameA < nameB) {
+          return -1;
+        }
+        if (nameA > nameB) {
+          return 1;
+        }
 
+        // i nomi devono essere uguali
+        return 0;
+      });
+    }
+    if (type === 'prezzoASC') {
+      arrayFiles.sort(function(a, b) {
+        return a.valueTot - b.valueTot;
+      });
+    }
+    if (type === 'prezzoDESC') {
+      arrayFiles.sort(function(a, b) {
+        return b.valueTot - a.valueTot;
+      });
+    }
+    ls.set('files', arrayFiles);
+    this.setState({
+      files: ls.get('files') || []
+    });
+  };
   onSelectedFile = file => {
+    //console.log('onSelectedFile');
     this.setState({
       file: file
     });
@@ -67,6 +117,11 @@ class App extends Component {
     this.setState({
       file: '',
       files: null
+    });
+  };
+  onToggleSidebar = () => {
+    this.setState({
+      toggleSidebar: !this.state.toggleSidebar
     });
   };
 
@@ -78,6 +133,8 @@ class App extends Component {
           let fileResult = reader.result;
           fileResult = fileResult.replace(/[ï»¿]/g, '');
           let resultXML = this.parseXML(fileResult);
+          resultXML = returnObject(resultXML);
+          resultXML.dateUpload = Math.floor(Date.now() / 1000);
           let currentFiles = this.state.files ? this.state.files.slice(0) : [];
           let newCurrentFiles = [...currentFiles, resultXML];
           ls.set('files', newCurrentFiles);
@@ -105,12 +162,13 @@ class App extends Component {
     });
   };
   render() {
-    const isCorrectFile = this.state.file && checkProperty(this.state.file);
+    const fileXML = this.state.file.file;
+    const isCorrectFile = fileXML && checkProperty(fileXML);
     const errorUploadConfig = {
       buttonText: 'Riprova',
       onClick: e => this.restartUpload(e)
     };
-    const previewActive = false;
+    const previewActive = true;
     return (
       <div className="App">
         <Header
@@ -119,27 +177,31 @@ class App extends Component {
         />
         <FlexContainer>
           <Col flex={2}>
-            {!this.state.file && this.state.isXML && (
+            {!fileXML && this.state.isXML && (
               <Uploader onDrop={e => this.onDrop(e)} />
             )}
             {!this.state.isXML && (
               <ErrorUpload {...errorUploadConfig} text="Non è un file XML." />
             )}
-            {this.state.file && !checkProperty(this.state.file) && (
+            {fileXML && !checkProperty(fileXML) && (
               <ErrorUpload
                 {...errorUploadConfig}
                 text="Il File XML non è una Fattura Elettronica regolare."
               />
             )}
-            {isCorrectFile && <Viewer file={this.state.file} />}
+            {isCorrectFile && <Viewer file={fileXML} />}
           </Col>
           {this.state.files && previewActive && (
-            <ColPreviewer flex={1}>
+            <ColPreviewer mini={this.state.toggleSidebar} flex={1}>
               <Preview
+                onSelectOrderBy={this.onSelectOrderBy}
                 onResetStore={this.onResetStore}
                 onSelectedFile={this.onSelectedFile}
+                onRemoveFile={this.onRemoveFile}
                 fileActive={this.state.file}
                 files={this.state.files}
+                onToggleSidebar={this.onToggleSidebar}
+                isMini={this.state.toggleSidebar}
               />
             </ColPreviewer>
           )}

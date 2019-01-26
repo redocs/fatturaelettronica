@@ -4,10 +4,10 @@ import styled from 'styled-components';
 //import axios from 'axios';
 
 const UploaderContainer = styled.div`
-  width: 40vw;
+  width: 80%;
   min-height: 300px;
-  background: #e8e8e8;
-  border-radius: 6px;
+  background: #ffffff;
+  border-radius: 4px;
   border: 2px dashed #a7a7a7;
   margin: 10px auto;
   display: flex;
@@ -19,36 +19,6 @@ const UploaderContainer = styled.div`
 `;
 
 class Uploader extends Component {
-  //   onDrop = acceptedFiles => {
-  //     acceptedFiles.forEach(file => {
-  //       const reader = new FileReader();
-  //       reader.onload = () => {
-  //         const fileAsBinaryString = reader.result;
-  //         console.log(fileAsBinaryString);
-  //         // const data = new FormData();
-  //         // console.log(file, reader);
-  //         // data.append('File[]', file);
-
-  //         // axios
-  //         //   .post('http://localhost:8000/upload', data)
-  //         //   .then(function(response) {
-  //         //     // this.setState({
-  //         //     //   imageURL: `http://localhost:8000/${body.file}`,
-  //         //     //   uploadStatus: true
-  //         //     // });
-  //         //     console.log(response);
-  //         //   })
-  //         //   .catch(function(error) {
-  //         //     console.log(error);
-  //         //   });
-  //       };
-  //       reader.onabort = () => console.log('file reading was aborted');
-  //       reader.onerror = () => console.log('file reading has failed');
-
-  //       reader.readAsBinaryString(file);
-  //     });
-  //   };
-
   render() {
     return (
       <Dropzone onDrop={this.props.onDrop}>

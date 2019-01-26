@@ -46,11 +46,6 @@ class FattFooter extends Component {
     const fatturaBody = json[fattProperty].FatturaElettronicaBody[0];
     const valuta = fatturaBody.DatiGenerali[0].DatiGeneraliDocumento[0].Divisa;
     const valutaFatt = selectValuta(valuta);
-    //const fatturaHeader = json[fattProperty].FatturaElettronicaHeader;
-
-    //const cedente = fatturaHeader[0].CedentePrestatore[0];
-    //const committente = fatturaHeader[0].CessionarioCommittente[0];
-
     const datiDocumento = fatturaBody.DatiGenerali[0].DatiGeneraliDocumento[0];
 
     return (
