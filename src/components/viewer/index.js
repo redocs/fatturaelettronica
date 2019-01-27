@@ -11,9 +11,9 @@ const ViewerDiv = styled.div`
   padding: 0;
 `;
 const ViewerContainer = styled.div`
-  padding: 20px;
-  box-shadow: 0px 5px 10px 1px #ccc;
-  margin-top: 20px;
+  padding: 10px;
+  margin: 10px 5px 10px 10px;
+  background: #fff;
   @media print {
     box-shadow: none;
     margin: 0;
@@ -28,12 +28,6 @@ class Viewer extends Component {
       file: this.props.file
     };
   }
-
-  // componentDidMount() {
-  //   this.setState({
-  //     isLoading: true
-  //   });
-  // }
 
   render() {
     const fileResult = this.props.file;

@@ -24,10 +24,43 @@ export function correctData(data) {
   return newData;
 }
 
+export function dateToTimestamp(date) {
+  var newdate = date
+    .split('/')
+    .reverse()
+    .join('/');
+  return new Date(newdate).getTime() / 1000;
+}
+
 export function selectValuta(valuta) {
   const valutaDesc = {
     EUR: '€',
     DOL: '$'
   };
   return valutaDesc[valuta];
+}
+
+export function returnObject(file) {
+  const fattProperty = selectProperty(file);
+  const fatturaBody = file[fattProperty].FatturaElettronicaBody[0];
+  const fatturaHeader = file[fattProperty].FatturaElettronicaHeader;
+  const cedente = fatturaHeader[0].CedentePrestatore[0];
+  const datiDocumento = fatturaBody.DatiGenerali[0].DatiGeneraliDocumento[0];
+  const dateDoc = correctData(datiDocumento.Data);
+  const name = cedente.DatiAnagrafici[0].Anagrafica[0].Denominazione.toString();
+  const dateDocTimestamp = dateToTimestamp(dateDoc);
+  const valueTot = datiDocumento.ImportoTotaleDocumento
+    ? datiDocumento.ImportoTotaleDocumento.toString()
+    : 0;
+  const valuta = datiDocumento.Divisa;
+  const valueCurrency = selectValuta(valuta);
+
+  return {
+    file,
+    name,
+    dateDoc,
+    dateDocTimestamp,
+    valueTot,
+    valueCurrency
+  };
 }
