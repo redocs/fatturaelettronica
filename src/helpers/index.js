@@ -50,7 +50,7 @@ export function returnObject(file) {
   const name = cedente.DatiAnagrafici[0].Anagrafica[0].Denominazione.toString();
   const dateDocTimestamp = dateToTimestamp(dateDoc);
   const valueTot = datiDocumento.ImportoTotaleDocumento ?
-    datiDocumento.ImportoTotaleDocumento.toString() :
+    parseFloat(datiDocumento.ImportoTotaleDocumento.toString()) :
     0;
   const valuta = datiDocumento.Divisa;
   const valueCurrency = selectValuta(valuta);
@@ -67,6 +67,6 @@ export function returnObject(file) {
 
 export function getParamUrl() {
   var url = new URL(window.location.href);
-  var v = url.searchParams.get("v");
+  var v = url.searchParams.get('v');
   return v;
 }

@@ -42,7 +42,7 @@ class TableFattura extends Component {
           <span>
             <span>{tipoSconto[sconto.Tipo]}</span>
             <span>{sconto.Percentuale}</span>
-            <span>{sconto.Importo}</span>
+            <span>{parseFloat(sconto.Importo, 10).toFixed(2)}</span>
           </span>
         );
       });
@@ -52,15 +52,15 @@ class TableFattura extends Component {
         <tr key={info.NumeroLinea}>
           <Th scope="row">{info.NumeroLinea}</Th>
           <Td>{info.Descrizione}</Td>
-          <Td>{info.Quantita ? info.Quantita : '0'}</Td>
+          <Td>{info.Quantita ? parseInt(info.Quantita, 10) : '0'}</Td>
           <Td>
-            {info.PrezzoUnitario} {valuta}
+            {parseFloat(info.PrezzoUnitario, 10).toFixed(2)} {valuta}
           </Td>
           <Td>{info.ScontoMaggiorazione ? scontoMaggiorazione : ''}</Td>
           <Td>
-            {info.PrezzoTotale} {valuta}
+            {parseFloat(info.PrezzoTotale, 10).toFixed(2)} {valuta}
           </Td>
-          <Td>{info.AliquotaIVA}</Td>
+          <Td>{parseInt(info.AliquotaIVA, 10)}</Td>
         </tr>
       );
     });

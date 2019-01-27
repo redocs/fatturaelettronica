@@ -74,9 +74,10 @@ class ModalitaPagamento extends Component {
       TP03: 'Anticipo'
     };
 
-    const scadenzaPagamento = correctData(
-      datiPagamento.DettaglioPagamento[0].DataScadenzaPagamento
-    );
+    const scadenzaPagamento = datiPagamento.DettaglioPagamento[0]
+      .DataScadenzaPagamento
+      ? correctData(datiPagamento.DettaglioPagamento[0].DataScadenzaPagamento)
+      : '';
 
     const importoPagamento =
       datiPagamento.DettaglioPagamento[0].ImportoPagamento;
