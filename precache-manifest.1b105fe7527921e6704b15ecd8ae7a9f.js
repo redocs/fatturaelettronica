@@ -1,11 +1,11 @@
 self.__precacheManifest = [
   {
-    "revision": "71bcda5b52a0086374dd",
+    "revision": "8647b266d1a53c6bdc07",
     "url": "/fatturaelettronica/static/css/main.20a4393d.chunk.css"
   },
   {
-    "revision": "71bcda5b52a0086374dd",
-    "url": "/fatturaelettronica/static/js/main.71bcda5b.chunk.js"
+    "revision": "8647b266d1a53c6bdc07",
+    "url": "/fatturaelettronica/static/js/main.8647b266.chunk.js"
   },
   {
     "revision": "6a4a5dc78b9cee7a1853",
@@ -16,7 +16,7 @@ self.__precacheManifest = [
     "url": "/fatturaelettronica/static/js/runtime~main.ab3ddb9d.js"
   },
   {
-    "revision": "e5c169612bcc7dc52d09ad4b50157212",
+    "revision": "ade062c109fe4bd352131f047c5f4af9",
     "url": "/fatturaelettronica/index.html"
   }
 ];
