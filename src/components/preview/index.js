@@ -55,6 +55,8 @@ const Pitem = styled.li`
   margin: 0;
   padding: 5px;
   border-bottom: 2px solid #fff;
+  border-top: 2px solid #fff;
+  margin-top: -2px;
   line-height: 33px;
   display: flex;
   justify-content: space-between;
@@ -273,7 +275,7 @@ class Preview extends Component {
                 {filesArray.map((file, i) => {
                   //console.log(i);
                   return (
-                    <Draggable key={i} draggableId={file.name} index={i}>
+                    <Draggable key={i} draggableId={file.fileID} index={i}>
                       {(provided, snapshot) => (
                         <Pitem
                           ref={provided.innerRef}

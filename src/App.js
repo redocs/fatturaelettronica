@@ -4,7 +4,7 @@ import Viewer from './components/viewer';
 import Uploader from './components/uploader';
 import ErrorUpload from './components/uploader/errorUpload';
 import Preview from './components/preview';
-import { checkProperty, returnObject } from './helpers';
+import { checkProperty, returnObject, getParamUrl } from './helpers';
 import styled from 'styled-components';
 import './App.css';
 import ls from 'local-storage';
@@ -134,6 +134,7 @@ class App extends Component {
   };
 
   onDrop = acceptedFiles => {
+    let i = 0;
     acceptedFiles.forEach(file => {
       const reader = new FileReader();
       reader.onload = () => {
@@ -143,6 +144,9 @@ class App extends Component {
           let resultXML = this.parseXML(fileResult);
           resultXML = returnObject(resultXML);
           resultXML.dateUpload = Math.floor(Date.now() / 1000);
+          resultXML.fileID =
+            resultXML.dateDocTimestamp + '-' + resultXML.dateUpload + '-' + i;
+          i++;
           let currentFiles = this.state.files ? this.state.files.slice(0) : [];
           let newCurrentFiles = [...currentFiles, resultXML];
           ls.set('files', newCurrentFiles);
@@ -176,7 +180,8 @@ class App extends Component {
       buttonText: 'Riprova',
       onClick: e => this.restartUpload(e)
     };
-    const previewActive = false;
+    const newVersion = getParamUrl() === 'v2' ? true : false;
+    const previewActive = newVersion ? newVersion : false;
     return (
       <div className="App">
         <Header
