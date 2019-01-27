@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
 
 importScripts(
-  "/fatturaelettronica/precache-manifest.8d4dcce7da6fa54bd0b65e191cb56f18.js"
+  "/fatturaelettronica/precache-manifest.a8f7e64cf826907142b52e49addb7255.js"
 );
 
 workbox.clientsClaim();

@@ -176,7 +176,7 @@ class App extends Component {
       buttonText: 'Riprova',
       onClick: e => this.restartUpload(e)
     };
-    const previewActive = true;
+    const previewActive = false;
     return (
       <div className="App">
         <Header
