@@ -9,6 +9,7 @@ import {
   faCaretLeft,
   faFileInvoice
 } from '@fortawesome/free-solid-svg-icons';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
 library.add(faTimesCircle);
 library.add(faCaretRight);
@@ -153,6 +154,15 @@ const PreviewDiv = styled.div`
   }
 `;
 
+const reorder = (list, startIndex, endIndex) => {
+  console.log('list', list);
+  const result = Array.from(list);
+  const [removed] = result.splice(startIndex, 1);
+  result.splice(endIndex, 0, removed);
+
+  return result;
+};
+
 class PreviewItem extends Component {
   loadFile = file => {
     //console.log('file', file);
@@ -199,6 +209,21 @@ class Preview extends Component {
     this.state = {
       active: this.props.fileActive
     };
+    this.onDragEnd = this.onDragEnd.bind(this);
+  }
+  onDragEnd(result) {
+    // dropped outside the list
+    console.log('result', result);
+    if (!result.destination) {
+      return;
+    }
+    const files = reorder(
+      this.props.files,
+      result.source.index,
+      result.destination.index
+    );
+
+    this.props.onDragEnd(files);
   }
   loadFile = file => {
     //console.log('file', file);
@@ -241,28 +266,47 @@ class Preview extends Component {
             <OrderBy onSelectOrderBy={e => this.onSelectOrderBy(e)} />
           </ColMini>
         </Header>
-        <PreviewContainer>
-          {filesArray.map((file, i) => {
-            //console.log(i);
-            return (
-              <Pitem key={i} active={this.props.fileActive === file}>
-                <PitemSpanMinimize onClick={e => this.loadFile(file)}>
-                  <span>{i + 1}</span>
-                  <FontAwesomeIcon size="lg" icon="file-invoice" />
-                </PitemSpanMinimize>
-                <PreviewItem info={file} onClick={e => this.loadFile(file)} />
-                <PitemButton
-                  textAlign="center"
-                  width="30px"
-                  justifyContent="center"
-                  onClick={e => this.onClickRemove(i)}
-                >
-                  <FontAwesomeIcon icon="times-circle" />
-                </PitemButton>
-              </Pitem>
-            );
-          })}
-        </PreviewContainer>
+        <DragDropContext onDragEnd={e => this.onDragEnd(e)}>
+          <Droppable droppableId="droppable">
+            {(provided, snapshot) => (
+              <PreviewContainer ref={provided.innerRef}>
+                {filesArray.map((file, i) => {
+                  //console.log(i);
+                  return (
+                    <Draggable key={i} draggableId={file.name} index={i}>
+                      {(provided, snapshot) => (
+                        <Pitem
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                          key={i}
+                          active={this.props.fileActive === file}
+                        >
+                          <PitemSpanMinimize onClick={e => this.loadFile(file)}>
+                            <span>{i + 1}</span>
+                            <FontAwesomeIcon size="lg" icon="file-invoice" />
+                          </PitemSpanMinimize>
+                          <PreviewItem
+                            info={file}
+                            onClick={e => this.loadFile(file)}
+                          />
+                          <PitemButton
+                            textAlign="center"
+                            width="30px"
+                            justifyContent="center"
+                            onClick={e => this.onClickRemove(i)}
+                          >
+                            <FontAwesomeIcon icon="times-circle" />
+                          </PitemButton>
+                        </Pitem>
+                      )}
+                    </Draggable>
+                  );
+                })}
+              </PreviewContainer>
+            )}
+          </Droppable>
+        </DragDropContext>
       </PreviewDiv>
     );
   }

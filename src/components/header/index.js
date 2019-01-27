@@ -12,6 +12,7 @@ const AppHeader = styled.header`
   @media print {
     display: none;
   }
+  -webkit-app-region: drag;
 `;
 
 const Col = styled.div`

@@ -125,6 +125,14 @@ class App extends Component {
     });
   };
 
+  onDragEnd = files => {
+    ls.set('files', files);
+
+    this.setState({
+      files: ls.get('files') || []
+    });
+  };
+
   onDrop = acceptedFiles => {
     acceptedFiles.forEach(file => {
       const reader = new FileReader();
@@ -202,6 +210,7 @@ class App extends Component {
                 files={this.state.files}
                 onToggleSidebar={this.onToggleSidebar}
                 isMini={this.state.toggleSidebar}
+                onDragEnd={this.onDragEnd}
               />
             </ColPreviewer>
           )}
