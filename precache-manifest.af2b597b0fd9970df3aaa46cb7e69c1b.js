@@ -16,7 +16,7 @@ self.__precacheManifest = [
     "url": "/fatturaelettronica/static/js/runtime~main.ab3ddb9d.js"
   },
   {
-    "revision": "18ad8fd72fcae64c1bf3fb88f2f04b25",
+    "revision": "bf39eae21b3a017423cf555119dd2432",
     "url": "/fatturaelettronica/index.html"
   }
 ];
