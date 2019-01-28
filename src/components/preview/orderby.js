@@ -1,14 +1,18 @@
 import React, { Component } from 'react';
-import styled from 'styled-components';
+import styled, { ThemeProvider } from 'styled-components';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCaretDown } from '@fortawesome/free-solid-svg-icons';
+import { theme } from '../../theme';
 
 library.add(faCaretDown);
 
 const OrderByContainer = styled.div`
   position: relative;
-  ${props => (props.open ? 'filter: drop-shadow(0px 2px 2px #333);' : '')}
+  ${props =>
+    props.open
+      ? 'filter: drop-shadow(0px 2px 2px ' + props.theme.buttonColor + ');'
+      : ''}
 `;
 const OrderBy = styled.div`
   position: absolute;
@@ -18,13 +22,13 @@ const OrderBy = styled.div`
   min-width: 10rem;
   padding: 5px 0;
   margin: -1px 0 0;
-  font-size: 12px;
-  color: #313131;
+  font-size: 11px;
+  color: ${props => props.theme.buttonColor};
   text-align: left;
   list-style: none;
-  background-color: #fff;
+  background-color: ${props => props.theme.buttonBg};
   background-clip: padding-box;
-  border: 1px solid #313131;
+  border: 1px solid ${props => props.theme.buttonColor};
   border-radius: 4px;
   border-top-right-radius: 0;
   right: 0px;
@@ -38,13 +42,17 @@ const OrderItem = styled.div`
   padding: 10px 0;
   clear: both;
   font-weight: bolder;
-  color: #313131;
+  color: ${props => props.theme.buttonColor};
   text-align: center;
   white-space: nowrap;
   background-color: transparent;
   border: 0;
   cursor: pointer;
-  border-bottom: 1px solid #313131;
+  border-bottom: 1px solid ${props => props.theme.buttonColor};
+  font-family: 'Archivo', -apple-system, BlinkMacSystemFont, 'Segoe UI',
+    'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans',
+    'Helvetica Neue', sans-serif;
+  font-weight: normal;
 
   &:last-child {
     border: none;
@@ -54,7 +62,8 @@ const OrderItem = styled.div`
 const Button = styled.button`
   padding: ${props => (props.icon ? '3px 20px;' : '8px 20px')};
   ${props => (props.icon ? 'font-size: 20px;' : '')}
-  border: 1px solid #333;
+  background-color: ${props => props.theme.buttonBg};
+  border: 1px solid ${props => props.theme.buttonColor};
   border-radius: 4px;
   cursor: pointer;
   text-transform: uppercase;
@@ -67,7 +76,8 @@ const Button = styled.button`
 
   &:focus {
     outline: none;
-    box-shadow: ${props => (props.open ? 'none' : '0px 0px 0px 2px #333')};
+    box-shadow: ${props =>
+      props.open ? 'none' : '0px 0px 0px 2px ' + props.theme.buttonColor};
   }
 
   > span {
@@ -95,27 +105,31 @@ class OrderByComponent extends Component {
   };
   render() {
     return (
-      <OrderByContainer open={this.state.open}>
-        <Button open={this.state.open} onClick={e => this.toggleDropdown(e)}>
-          Ordina Per
-          <span>
-            <FontAwesomeIcon size="lg" icon="caret-down" />
-          </span>
-        </Button>
-        <OrderBy open={this.state.open}>
-          <OrderItem onClick={e => this.orderBy('name')}>Nome</OrderItem>
-          <OrderItem onClick={e => this.orderBy('dateASC')}>Data ASC</OrderItem>
-          <OrderItem onClick={e => this.orderBy('dateDESC')}>
-            Data DESC
-          </OrderItem>
-          <OrderItem onClick={e => this.orderBy('prezzoASC')}>
-            Prezzo ASC
-          </OrderItem>
-          <OrderItem onClick={e => this.orderBy('prezzoDESC')}>
-            Prezzo DESC
-          </OrderItem>
-        </OrderBy>
-      </OrderByContainer>
+      <ThemeProvider theme={theme[this.props.themeColor]}>
+        <OrderByContainer open={this.state.open}>
+          <Button open={this.state.open} onClick={e => this.toggleDropdown(e)}>
+            Ordina Per
+            <span>
+              <FontAwesomeIcon size="lg" icon="caret-down" />
+            </span>
+          </Button>
+          <OrderBy open={this.state.open}>
+            <OrderItem onClick={e => this.orderBy('name')}>Nome</OrderItem>
+            <OrderItem onClick={e => this.orderBy('dateASC')}>
+              Data ASC
+            </OrderItem>
+            <OrderItem onClick={e => this.orderBy('dateDESC')}>
+              Data DESC
+            </OrderItem>
+            <OrderItem onClick={e => this.orderBy('prezzoASC')}>
+              Prezzo ASC
+            </OrderItem>
+            <OrderItem onClick={e => this.orderBy('prezzoDESC')}>
+              Prezzo DESC
+            </OrderItem>
+          </OrderBy>
+        </OrderByContainer>
+      </ThemeProvider>
     );
   }
 }

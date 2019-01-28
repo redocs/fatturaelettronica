@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import styled from 'styled-components';
+import styled, { ThemeProvider } from 'styled-components';
+import { theme } from '../../theme';
 
 const AppHeader = styled.header`
-  background-color: #333;
+  background-color: ${props => props.theme.headerBg};
   min-height: 15vh;
   display: flex;
   align-items: center;
@@ -23,7 +24,9 @@ const Col = styled.div`
 
 const ButtonPrint = styled.button`
   padding: 8px 20px;
-  border: 1px solid #333;
+  background-color: ${props => props.theme.buttonBg};
+  border: 1px solid ${props => props.theme.buttonColor};
+  color: ${props => props.theme.buttonColor};
   border-radius: 4px;
   cursor: pointer;
   text-transform: uppercase;
@@ -40,6 +43,7 @@ const TitleH1 = styled.h1`
   padding: 0;
   margin: 0 0 4px;
   font-size: 22px;
+  text-transform: uppercase;
 `;
 
 const SubTitleH3 = styled.h3`
@@ -51,27 +55,32 @@ const SubTitleH3 = styled.h3`
 class Header extends Component {
   render() {
     return (
-      <AppHeader>
-        <Col justifyContent="flex-start" flex={2}>
-          <TitleContainer>
-            <TitleH1>Visualizza la Fattura Elettronica</TitleH1>
-            <SubTitleH3>
-              Tool per caricare i file XML della Fattura Elettronica e
-              Visualizzarli come PDF
-            </SubTitleH3>
-          </TitleContainer>
-        </Col>
-        <Col justifyContent="flex-end" flex={1}>
-          {this.props.isCorrectFile && (
-            <ButtonPrint onClick={e => this.props.onClick(e)}>
-              RESTART
+      <ThemeProvider theme={theme[this.props.themeColor]}>
+        <AppHeader>
+          <Col justifyContent="flex-start" flex={2}>
+            <TitleContainer>
+              <TitleH1>Visualizza la Fattura Elettronica</TitleH1>
+              <SubTitleH3>
+                Tool per caricare i file XML della Fattura Elettronica e
+                Visualizzarli come PDF
+              </SubTitleH3>
+            </TitleContainer>
+          </Col>
+          <Col justifyContent="flex-end" flex={1}>
+            {this.props.isCorrectFile && !this.props.previewActive && (
+              <ButtonPrint onClick={e => this.props.onClick(e)}>
+                RESTART
+              </ButtonPrint>
+            )}
+            {this.props.isCorrectFile && (
+              <ButtonPrint onClick={() => window.print()}>STAMPA</ButtonPrint>
+            )}
+            <ButtonPrint onClick={e => this.props.onChangeTheme(e)}>
+              CAMBIA TEMA
             </ButtonPrint>
-          )}
-          {this.props.isCorrectFile && (
-            <ButtonPrint onClick={() => window.print()}>STAMPA</ButtonPrint>
-          )}
-        </Col>
-      </AppHeader>
+          </Col>
+        </AppHeader>
+      </ThemeProvider>
     );
   }
 }

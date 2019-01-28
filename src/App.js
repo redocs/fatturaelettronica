@@ -5,9 +5,10 @@ import Uploader from './components/uploader';
 import ErrorUpload from './components/uploader/errorUpload';
 import Preview from './components/preview';
 import { checkProperty, returnObject, getParamUrl } from './helpers';
-import styled from 'styled-components';
+import styled, { ThemeProvider } from 'styled-components';
 import './App.css';
 import ls from 'local-storage';
+import { theme } from './theme';
 
 const FlexContainer = styled.div`
   width: 100%;
@@ -19,10 +20,11 @@ const Col = styled.div`
 `;
 
 const ColPreviewer = styled(Col)`
-  max-width: ${props => (props.mini ? '100px' : 'auto')}
+  max-width: ${props => (props.mini ? '100px' : 'none')}
   padding: 0;
   margin: 10px 10px 10px 5px;
-  background: #585858;
+  background: ${props => props.theme.sidebarBg};
+  border: 1px solid ${props => props.theme.sidebarBorderColor};
   color: #fff;
   border-radius: 4px;
   @media print {
@@ -40,7 +42,8 @@ class App extends Component {
       file: '',
       files: ls.get('files') || null,
       isXML: true,
-      toggleSidebar: false
+      toggleSidebar: false,
+      themeColor: ls.get('theme') || 'theme1'
     };
   }
 
@@ -173,6 +176,16 @@ class App extends Component {
       isXML: true
     });
   };
+  changeTheme = () => {
+    let themeV = 'theme2';
+    if (this.state.themeColor === 'theme2') {
+      themeV = 'theme1';
+    }
+    ls.set('theme', themeV);
+    this.setState({
+      themeColor: ls.get('theme')
+    });
+  };
   render() {
     const fileXML = this.state.file.file;
     const isCorrectFile = fileXML && checkProperty(fileXML);
@@ -183,44 +196,55 @@ class App extends Component {
     const newVersion = getParamUrl() === 'v2' ? true : false;
     const previewActive = newVersion ? newVersion : false;
     return (
-      <div className="App">
-        <Header
-          isCorrectFile={isCorrectFile}
-          onClick={e => this.restartUpload(e)}
-        />
-        <FlexContainer>
-          <Col flex={2}>
-            {!fileXML && this.state.isXML && (
-              <Uploader onDrop={e => this.onDrop(e)} />
+      <ThemeProvider theme={theme[this.state.themeColor]}>
+        <div className="App">
+          <Header
+            themeColor={this.state.themeColor}
+            previewActive={previewActive}
+            isCorrectFile={isCorrectFile}
+            onClick={e => this.restartUpload(e)}
+            onChangeTheme={e => this.changeTheme(e)}
+          />
+          <FlexContainer>
+            <Col flex={2}>
+              {!fileXML && this.state.isXML && (
+                <Uploader
+                  themeColor={this.state.themeColor}
+                  text="Rilascia il file XML qui o clicca per caricare il file dal tuo computer"
+                  onDrop={e => this.onDrop(e)}
+                />
+              )}
+              {!this.state.isXML && (
+                <ErrorUpload {...errorUploadConfig} text="Non è un file XML." />
+              )}
+              {fileXML && !checkProperty(fileXML) && (
+                <ErrorUpload
+                  {...errorUploadConfig}
+                  text="Il File XML non è una Fattura Elettronica regolare."
+                />
+              )}
+              {isCorrectFile && <Viewer file={fileXML} />}
+            </Col>
+            {this.state.files && previewActive && (
+              <ColPreviewer mini={this.state.toggleSidebar} flex={1}>
+                <Preview
+                  themeColor={this.state.themeColor}
+                  onSelectOrderBy={this.onSelectOrderBy}
+                  onResetStore={this.onResetStore}
+                  onSelectedFile={this.onSelectedFile}
+                  onRemoveFile={this.onRemoveFile}
+                  fileActive={this.state.file.fileID}
+                  files={this.state.files}
+                  onToggleSidebar={this.onToggleSidebar}
+                  isMini={this.state.toggleSidebar}
+                  onDragEnd={this.onDragEnd}
+                  onDrop={this.onDrop}
+                />
+              </ColPreviewer>
             )}
-            {!this.state.isXML && (
-              <ErrorUpload {...errorUploadConfig} text="Non è un file XML." />
-            )}
-            {fileXML && !checkProperty(fileXML) && (
-              <ErrorUpload
-                {...errorUploadConfig}
-                text="Il File XML non è una Fattura Elettronica regolare."
-              />
-            )}
-            {isCorrectFile && <Viewer file={fileXML} />}
-          </Col>
-          {this.state.files && previewActive && (
-            <ColPreviewer mini={this.state.toggleSidebar} flex={1}>
-              <Preview
-                onSelectOrderBy={this.onSelectOrderBy}
-                onResetStore={this.onResetStore}
-                onSelectedFile={this.onSelectedFile}
-                onRemoveFile={this.onRemoveFile}
-                fileActive={this.state.file}
-                files={this.state.files}
-                onToggleSidebar={this.onToggleSidebar}
-                isMini={this.state.toggleSidebar}
-                onDragEnd={this.onDragEnd}
-              />
-            </ColPreviewer>
-          )}
-        </FlexContainer>
-      </div>
+          </FlexContainer>
+        </div>
+      </ThemeProvider>
     );
   }
 }
