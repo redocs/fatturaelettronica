@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import styled, { ThemeProvider } from 'styled-components';
 import { theme } from '../../theme';
+import Installapp from './installapp';
 
 const AppHeader = styled.header`
   background-color: ${props => props.theme.headerBg};
@@ -17,9 +18,9 @@ const AppHeader = styled.header`
 `;
 
 const Col = styled.div`
-  width: 100%;
   display: flex;
   justify-content: ${props => props.justifyContent};
+  flex: ${props => props.flex};
 `;
 
 const ButtonPrint = styled.button`
@@ -57,7 +58,10 @@ class Header extends Component {
     return (
       <ThemeProvider theme={theme[this.props.themeColor]}>
         <AppHeader>
-          <Col justifyContent="flex-start" flex={2}>
+          <Col flex={1}>
+            <Installapp themeColor={this.props.themeColor} />
+          </Col>
+          <Col justifyContent="flex-start" flex={4}>
             <TitleContainer>
               <TitleH1>Visualizza la Fattura Elettronica</TitleH1>
               <SubTitleH3>
