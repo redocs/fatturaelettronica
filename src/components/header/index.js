@@ -58,9 +58,11 @@ class Header extends Component {
     return (
       <ThemeProvider theme={theme[this.props.themeColor]}>
         <AppHeader>
-          <Col flex={1}>
-            <Installapp themeColor={this.props.themeColor} />
-          </Col>
+          {this.props.previewActive && (
+            <Col flex={1}>
+              <Installapp themeColor={this.props.themeColor} />
+            </Col>
+          )}
           <Col justifyContent="flex-start" flex={4}>
             <TitleContainer>
               <TitleH1>Visualizza la Fattura Elettronica</TitleH1>
