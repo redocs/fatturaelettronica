@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
-import styled, { ThemeProvider } from 'styled-components';
+import styled from 'styled-components';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCaretDown } from '@fortawesome/free-solid-svg-icons';
-import { theme } from '../../theme';
 
 library.add(faCaretDown);
 
@@ -105,31 +104,27 @@ class OrderByComponent extends Component {
   };
   render() {
     return (
-      <ThemeProvider theme={theme[this.props.themeColor]}>
-        <OrderByContainer open={this.state.open}>
-          <Button open={this.state.open} onClick={e => this.toggleDropdown(e)}>
-            Ordina Per
-            <span>
-              <FontAwesomeIcon size="lg" icon="caret-down" />
-            </span>
-          </Button>
-          <OrderBy open={this.state.open}>
-            <OrderItem onClick={e => this.orderBy('name')}>Nome</OrderItem>
-            <OrderItem onClick={e => this.orderBy('dateASC')}>
-              Data ASC
-            </OrderItem>
-            <OrderItem onClick={e => this.orderBy('dateDESC')}>
-              Data DESC
-            </OrderItem>
-            <OrderItem onClick={e => this.orderBy('prezzoASC')}>
-              Prezzo ASC
-            </OrderItem>
-            <OrderItem onClick={e => this.orderBy('prezzoDESC')}>
-              Prezzo DESC
-            </OrderItem>
-          </OrderBy>
-        </OrderByContainer>
-      </ThemeProvider>
+      <OrderByContainer open={this.state.open}>
+        <Button open={this.state.open} onClick={e => this.toggleDropdown(e)}>
+          Ordina Per
+          <span>
+            <FontAwesomeIcon size="lg" icon="caret-down" />
+          </span>
+        </Button>
+        <OrderBy open={this.state.open}>
+          <OrderItem onClick={e => this.orderBy('name')}>Nome</OrderItem>
+          <OrderItem onClick={e => this.orderBy('dateASC')}>Data ASC</OrderItem>
+          <OrderItem onClick={e => this.orderBy('dateDESC')}>
+            Data DESC
+          </OrderItem>
+          <OrderItem onClick={e => this.orderBy('prezzoASC')}>
+            Prezzo ASC
+          </OrderItem>
+          <OrderItem onClick={e => this.orderBy('prezzoDESC')}>
+            Prezzo DESC
+          </OrderItem>
+        </OrderBy>
+      </OrderByContainer>
     );
   }
 }

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import styled, { css, ThemeProvider } from 'styled-components';
+import styled, { css } from 'styled-components';
 import Uploader from '../uploader';
 import OrderBy from './orderby';
 import { library } from '@fortawesome/fontawesome-svg-core';
@@ -11,7 +11,6 @@ import {
   faFileInvoice
 } from '@fortawesome/free-solid-svg-icons';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import { theme } from '../../theme';
 
 library.add(faTimesCircle);
 library.add(faCaretRight);
@@ -191,28 +190,26 @@ class PreviewItem extends Component {
     };
 
     return (
-      <ThemeProvider theme={theme[this.props.themeColor]}>
-        <PitemSpanMini
-          clickable
-          {...itemSpanConfig}
-          onClick={e => this.loadFile(file)}
-        >
-          {/* {console.log(file)} */}
-          <PitemSpanName {...itemSpanConfig}>{file.name}</PitemSpanName>
-          {file.valueTot !== 0 && (
-            <PitemSpanValue
-              textAlign="right"
-              width="auto"
-              justifyContent="flex-end"
-            >
-              {file.valueTot} {file.valueCurrency}
-            </PitemSpanValue>
-          )}
-          <PitemSpan textAlign="right" width="auto" justifyContent="flex-end">
-            {file.dateDoc}
-          </PitemSpan>
-        </PitemSpanMini>
-      </ThemeProvider>
+      <PitemSpanMini
+        clickable
+        {...itemSpanConfig}
+        onClick={e => this.loadFile(file)}
+      >
+        {/* {console.log(file)} */}
+        <PitemSpanName {...itemSpanConfig}>{file.name}</PitemSpanName>
+        {file.valueTot !== 0 && (
+          <PitemSpanValue
+            textAlign="right"
+            width="auto"
+            justifyContent="flex-end"
+          >
+            {file.valueTot} {file.valueCurrency}
+          </PitemSpanValue>
+        )}
+        <PitemSpan textAlign="right" width="auto" justifyContent="flex-end">
+          {file.dateDoc}
+        </PitemSpan>
+      </PitemSpanMini>
     );
   }
 }
@@ -266,90 +263,87 @@ class Preview extends Component {
     const filesArray = this.props.files;
 
     return (
-      <ThemeProvider theme={theme[this.props.themeColor]}>
-        <PreviewDiv mini={this.props.isMini}>
-          <Header>
-            <Col justifyContent="flex-start">
-              <Button icon onClick={e => this.toggleSidebar(e)}>
-                <FontAwesomeIcon
-                  icon={this.props.isMini ? 'caret-left' : 'caret-right'}
-                />
-              </Button>
-            </Col>
-            <ColMini flex="2" justifyContent="center">
-              <TitleH2>Lista Fatture</TitleH2>
-            </ColMini>
-            <ColMini justifyContent="flex-end">
-              <Button onClick={e => this.resetStore(e)}>Reset</Button>
-            </ColMini>
-          </Header>
-          <Header>
-            <ColMini justifyContent="flex-end">
-              <OrderBy
-                themeColor={this.props.themeColor}
-                onSelectOrderBy={e => this.onSelectOrderBy(e)}
+      <PreviewDiv mini={this.props.isMini}>
+        <Header>
+          <Col justifyContent="flex-start">
+            <Button icon onClick={e => this.toggleSidebar(e)}>
+              <FontAwesomeIcon
+                icon={this.props.isMini ? 'caret-left' : 'caret-right'}
               />
-            </ColMini>
-          </Header>
-          <DragDropContext onDragEnd={e => this.onDragEnd(e)}>
-            <Droppable droppableId="droppable">
-              {(provided, snapshot) => (
-                <PreviewContainer ref={provided.innerRef}>
-                  {filesArray.map((file, i) => {
-                    //console.log(i);
-                    return (
-                      <Draggable
-                        key={file.fileID}
-                        draggableId={file.fileID}
-                        index={i}
-                      >
-                        {(provided, snapshot) => (
-                          <Pitem
-                            ref={provided.innerRef}
-                            {...provided.draggableProps}
-                            {...provided.dragHandleProps}
-                            active={this.props.fileActive === file.fileID}
+            </Button>
+          </Col>
+          <ColMini flex="2" justifyContent="center">
+            <TitleH2>Lista Fatture</TitleH2>
+          </ColMini>
+          <ColMini justifyContent="flex-end">
+            <Button onClick={e => this.resetStore(e)}>Reset</Button>
+          </ColMini>
+        </Header>
+        <Header>
+          <ColMini justifyContent="flex-end">
+            <OrderBy
+              themeColor={this.props.themeColor}
+              onSelectOrderBy={e => this.onSelectOrderBy(e)}
+            />
+          </ColMini>
+        </Header>
+        <DragDropContext onDragEnd={e => this.onDragEnd(e)}>
+          <Droppable droppableId="droppable">
+            {(provided, snapshot) => (
+              <PreviewContainer ref={provided.innerRef}>
+                {filesArray.map((file, i) => {
+                  //console.log(i);
+                  return (
+                    <Draggable
+                      key={file.fileID}
+                      draggableId={file.fileID}
+                      index={i}
+                    >
+                      {(provided, snapshot) => (
+                        <Pitem
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                          active={this.props.fileActive === file.fileID}
+                        >
+                          <PitemSpanMinimize onClick={e => this.loadFile(file)}>
+                            <span>{i + 1}</span>
+                            <FontAwesomeIcon size="lg" icon="file-invoice" />
+                          </PitemSpanMinimize>
+                          <PreviewItem
+                            themeColor={this.props.themeColor}
+                            info={file}
+                            onClick={e => this.loadFile(file)}
+                          />
+                          <PitemButton
+                            textAlign="center"
+                            width="30px"
+                            justifyContent="center"
+                            onClick={e => this.onClickRemove(i)}
                           >
-                            <PitemSpanMinimize
-                              onClick={e => this.loadFile(file)}
-                            >
-                              <span>{i + 1}</span>
-                              <FontAwesomeIcon size="lg" icon="file-invoice" />
-                            </PitemSpanMinimize>
-                            <PreviewItem
-                              themeColor={this.props.themeColor}
-                              info={file}
-                              onClick={e => this.loadFile(file)}
-                            />
-                            <PitemButton
-                              textAlign="center"
-                              width="30px"
-                              justifyContent="center"
-                              onClick={e => this.onClickRemove(i)}
-                            >
-                              <FontAwesomeIcon icon="times-circle" />
-                            </PitemButton>
-                          </Pitem>
-                        )}
-                      </Draggable>
-                    );
-                  })}
-                </PreviewContainer>
-              )}
-            </Droppable>
-          </DragDropContext>
-          {this.props.fileActive && !this.state.sidebar && (
-            <UploaderContainer>
-              <Uploader
-                inSidebar
-                themeColor={this.props.themeColor}
-                text="Carica un altra Fattura"
-                onDrop={e => this.onDrop(e)}
-              />
-            </UploaderContainer>
-          )}
-        </PreviewDiv>
-      </ThemeProvider>
+                            <FontAwesomeIcon icon="times-circle" />
+                          </PitemButton>
+                        </Pitem>
+                      )}
+                    </Draggable>
+                  );
+                })}
+              </PreviewContainer>
+            )}
+          </Droppable>
+        </DragDropContext>
+        {this.props.fileActive && !this.state.sidebar && (
+          <UploaderContainer>
+            <Uploader
+              inSidebar
+              isXML={true}
+              themeColor={this.props.themeColor}
+              text="Carica un altra Fattura"
+              onDrop={e => this.onDrop(e)}
+            />
+          </UploaderContainer>
+        )}
+      </PreviewDiv>
     );
   }
 }

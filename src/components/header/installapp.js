@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import styled, { ThemeProvider } from 'styled-components';
-import { theme } from '../../theme';
+import styled from 'styled-components';
 
 const InstallAppContainer = styled.div``;
 const Button = styled.button`
@@ -93,13 +92,11 @@ class InstallApp extends Component {
   //   }
   render() {
     return (
-      <ThemeProvider theme={theme[this.props.themeColor]}>
-        <InstallAppContainer>
-          {this.shouldShowAddButton() && (
-            <Button onClick={this.addToHome}>Add to Home Screen</Button>
-          )}
-        </InstallAppContainer>
-      </ThemeProvider>
+      <InstallAppContainer>
+        {this.shouldShowAddButton() && (
+          <Button onClick={this.addToHome}>Add to Home Screen</Button>
+        )}
+      </InstallAppContainer>
     );
   }
 }

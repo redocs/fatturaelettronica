@@ -2,13 +2,14 @@ import React, { Component } from 'react';
 import Header from './components/header';
 import Viewer from './components/viewer';
 import Uploader from './components/uploader';
-import ErrorUpload from './components/uploader/errorUpload';
 import Preview from './components/preview';
 import { checkProperty, returnObject, getParamUrl } from './helpers';
 import styled, { ThemeProvider } from 'styled-components';
 import './App.css';
 import ls from 'local-storage';
 import { theme } from './theme';
+import { BrowserRouter as Router, Route, NavLink } from 'react-router-dom';
+import { About } from './pages/about';
 
 const FlexContainer = styled.div`
   width: 100%;
@@ -20,7 +21,7 @@ const Col = styled.div`
 `;
 
 const ColPreviewer = styled(Col)`
-  max-width: ${props => (props.mini ? '100px' : 'none')}
+  max-width: ${props => (props.mini ? '100px' : '449px')}
   padding: 0;
   margin: 10px 10px 10px 5px;
   background: ${props => props.theme.sidebarBg};
@@ -32,9 +33,51 @@ const ColPreviewer = styled(Col)`
   }
 `;
 
+const MenuHeader = styled.nav`
+  list-style-type: none;
+  display: flex;
+  margin: 0;
+  padding: 6px 10px;
+  background: #333;
+  color: #fff;
+
+  a {
+    color: #fff;
+    padding: 1px 10px 2px;
+    display: inline-block;
+    text-decoration: none;
+    text-transform: uppercase;
+    position: relative;
+    border: 1px solid #fff;
+    margin-left: -1px;
+    transition: all 0.3s ease-in-out;
+    :hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+    :before {
+      content: '';
+      position: absolute;
+      width: 5px;
+      height: 5px;
+      background: #fff;
+      top: 6px;
+      left: -7px;
+      border-radius: 99em;
+      border: 4px solid #333;
+    }
+  }
+  a:first-child:before {
+    display: none;
+  }
+  a.active {
+    background: #fff;
+    color: #333;
+  }
+`;
+
 var xml2js = require('xml2js');
 
-class App extends Component {
+class Homepage extends Component {
   constructor(props) {
     super(props);
 
@@ -43,10 +86,10 @@ class App extends Component {
       files: ls.get('files') || null,
       isXML: true,
       toggleSidebar: false,
-      themeColor: ls.get('theme') || 'theme1'
+      themeColor: ls.get('theme') || 'theme1',
+      fileLoaded: false
     };
   }
-
   parseXML = file => {
     let resultFile;
     xml2js.parseString(file, {}, function(err, result) {
@@ -156,7 +199,8 @@ class App extends Component {
           this.setState({
             file: resultXML,
             files: ls.get('files') || [],
-            isXML: true
+            isXML: true,
+            fileLoaded: true
           });
         } else {
           this.setState({
@@ -170,6 +214,63 @@ class App extends Component {
       reader.readAsBinaryString(file);
     });
   };
+  render() {
+    const fileXML = this.state.file.file;
+    const isCorrectFile = fileXML && checkProperty(fileXML);
+
+    const newVersion = getParamUrl() === 'v2' ? true : false;
+    const previewActive = newVersion ? newVersion : true;
+    return (
+      <FlexContainer>
+        <Col flex={2}>
+          {!this.state.fileLoaded && (
+            <Uploader
+              isXML={this.state.isXML}
+              fileXML={fileXML}
+              themeColor={this.state.themeColor}
+              text="Rilascia il file XML qui o clicca per caricare il file dal tuo computer"
+              onDrop={e => this.onDrop(e)}
+              restartUpload={e => this.restartUpload(e)}
+            />
+          )}
+          {isCorrectFile && <Viewer file={fileXML} />}
+        </Col>
+        {this.state.files && previewActive && (
+          <ColPreviewer mini={this.state.toggleSidebar} flex={1}>
+            <Preview
+              themeColor={this.state.themeColor}
+              onSelectOrderBy={this.onSelectOrderBy}
+              onResetStore={this.onResetStore}
+              onSelectedFile={this.onSelectedFile}
+              onRemoveFile={this.onRemoveFile}
+              fileActive={this.state.file.fileID}
+              files={this.state.files}
+              onToggleSidebar={this.onToggleSidebar}
+              isMini={this.state.toggleSidebar}
+              onDragEnd={this.onDragEnd}
+              onDrop={this.onDrop}
+            />
+          </ColPreviewer>
+        )}
+      </FlexContainer>
+    );
+  }
+}
+
+class App extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      file: '',
+      files: ls.get('files') || null,
+      isXML: true,
+      toggleSidebar: false,
+      themeColor: ls.get('theme') || 'theme1',
+      fileLoaded: false
+    };
+  }
+
   restartUpload = () => {
     this.setState({
       file: '',
@@ -189,62 +290,49 @@ class App extends Component {
   render() {
     const fileXML = this.state.file.file;
     const isCorrectFile = fileXML && checkProperty(fileXML);
-    const errorUploadConfig = {
-      buttonText: 'Riprova',
-      onClick: e => this.restartUpload(e)
-    };
+
     const newVersion = getParamUrl() === 'v2' ? true : false;
-    const previewActive = newVersion ? newVersion : false;
+    const previewActive = newVersion ? newVersion : true;
+
+    const pages = [
+      { id: 1, slug: 'home', title: 'Home' },
+      {
+        id: 2,
+        slug: 'visualizzare-fatture-elettroniche',
+        title: 'Visualizzare Fatture Elettroniche'
+      }
+    ];
     return (
-      <ThemeProvider theme={theme[this.state.themeColor]}>
-        <div className="App">
-          <Header
-            themeColor={this.state.themeColor}
-            previewActive={previewActive}
-            isCorrectFile={isCorrectFile}
-            onClick={e => this.restartUpload(e)}
-            onChangeTheme={e => this.changeTheme(e)}
-          />
-          <FlexContainer>
-            <Col flex={2}>
-              {!fileXML && this.state.isXML && (
-                <Uploader
-                  themeColor={this.state.themeColor}
-                  text="Rilascia il file XML qui o clicca per caricare il file dal tuo computer"
-                  onDrop={e => this.onDrop(e)}
-                />
-              )}
-              {!this.state.isXML && (
-                <ErrorUpload {...errorUploadConfig} text="Non è un file XML." />
-              )}
-              {fileXML && !checkProperty(fileXML) && (
-                <ErrorUpload
-                  {...errorUploadConfig}
-                  text="Il File XML non è una Fattura Elettronica regolare."
-                />
-              )}
-              {isCorrectFile && <Viewer file={fileXML} />}
-            </Col>
-            {this.state.files && previewActive && (
-              <ColPreviewer mini={this.state.toggleSidebar} flex={1}>
-                <Preview
-                  themeColor={this.state.themeColor}
-                  onSelectOrderBy={this.onSelectOrderBy}
-                  onResetStore={this.onResetStore}
-                  onSelectedFile={this.onSelectedFile}
-                  onRemoveFile={this.onRemoveFile}
-                  fileActive={this.state.file.fileID}
-                  files={this.state.files}
-                  onToggleSidebar={this.onToggleSidebar}
-                  isMini={this.state.toggleSidebar}
-                  onDragEnd={this.onDragEnd}
-                  onDrop={this.onDrop}
-                />
-              </ColPreviewer>
-            )}
-          </FlexContainer>
-        </div>
-      </ThemeProvider>
+      <Router>
+        <ThemeProvider theme={theme[this.state.themeColor]}>
+          <div className="App">
+            <Header
+              themeColor={this.state.themeColor}
+              previewActive={previewActive}
+              isCorrectFile={isCorrectFile}
+              onClick={e => this.restartUpload(e)}
+              onChangeTheme={e => this.changeTheme(e)}
+            />
+            <MenuHeader>
+              {pages.map(page => (
+                <NavLink
+                  key={page.id}
+                  to={`/${page.slug}`}
+                  activeClassName="active"
+                >
+                  {page.title}
+                </NavLink>
+              ))}
+            </MenuHeader>
+            <Route exact path="/home" component={Homepage} />
+            <Route
+              exact
+              path="/visualizzare-fatture-elettroniche"
+              component={About}
+            />
+          </div>
+        </ThemeProvider>
+      </Router>
     );
   }
 }

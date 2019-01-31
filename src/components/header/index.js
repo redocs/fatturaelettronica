@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
-import styled, { ThemeProvider } from 'styled-components';
-import { theme } from '../../theme';
+import styled from 'styled-components';
 import Installapp from './installapp';
 
 const AppHeader = styled.header`
   background-color: ${props => props.theme.headerBg};
-  min-height: 15vh;
+  min-height: 80px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -23,16 +22,23 @@ const Col = styled.div`
   flex: ${props => props.flex};
 `;
 
-const ButtonPrint = styled.button`
+const Button = styled.button`
   padding: 8px 20px;
   background-color: ${props => props.theme.buttonBg};
-  border: 1px solid ${props => props.theme.buttonColor};
+  border: none;
   color: ${props => props.theme.buttonColor};
-  border-radius: 4px;
+  border-radius: 0;
   cursor: pointer;
   text-transform: uppercase;
   font-weight: bolder;
-  margin: 0 10px 0 0;
+  margin: 0 0 0 0;
+  min-height: 80px;
+  flex: 1;
+  max-width: 150px;
+`;
+
+const ButtonPrint = styled(Button)`
+  border-right: 1px solid ${props => props.theme.buttonColor};
 `;
 
 const TitleContainer = styled.div`
@@ -56,37 +62,33 @@ const SubTitleH3 = styled.h3`
 class Header extends Component {
   render() {
     return (
-      <ThemeProvider theme={theme[this.props.themeColor]}>
-        <AppHeader>
-          {this.props.previewActive && (
-            <Col flex={1}>
-              <Installapp themeColor={this.props.themeColor} />
-            </Col>
+      <AppHeader>
+        {this.props.previewActive && (
+          <Col flex={1}>
+            <Installapp />
+          </Col>
+        )}
+        <Col justifyContent="flex-start" flex={3}>
+          <TitleContainer>
+            <TitleH1>Visualizza la Fattura Elettronica</TitleH1>
+            <SubTitleH3>
+              Tool per caricare i file XML della Fattura Elettronica e
+              Visualizzarli come PDF
+            </SubTitleH3>
+          </TitleContainer>
+        </Col>
+        <Col justifyContent="flex-end" flex={1}>
+          {this.props.isCorrectFile && !this.props.previewActive && (
+            <Button onClick={e => this.props.onClick(e)}>RESTART</Button>
           )}
-          <Col justifyContent="flex-start" flex={4}>
-            <TitleContainer>
-              <TitleH1>Visualizza la Fattura Elettronica</TitleH1>
-              <SubTitleH3>
-                Tool per caricare i file XML della Fattura Elettronica e
-                Visualizzarli come PDF
-              </SubTitleH3>
-            </TitleContainer>
-          </Col>
-          <Col justifyContent="flex-end" flex={1}>
-            {this.props.isCorrectFile && !this.props.previewActive && (
-              <ButtonPrint onClick={e => this.props.onClick(e)}>
-                RESTART
-              </ButtonPrint>
-            )}
-            {this.props.isCorrectFile && (
-              <ButtonPrint onClick={() => window.print()}>STAMPA</ButtonPrint>
-            )}
-            <ButtonPrint onClick={e => this.props.onChangeTheme(e)}>
-              CAMBIA TEMA
-            </ButtonPrint>
-          </Col>
-        </AppHeader>
-      </ThemeProvider>
+          {this.props.isCorrectFile && (
+            <ButtonPrint onClick={() => window.print()}>STAMPA</ButtonPrint>
+          )}
+          <Button onClick={e => this.props.onChangeTheme(e)}>
+            CAMBIA TEMA
+          </Button>
+        </Col>
+      </AppHeader>
     );
   }
 }

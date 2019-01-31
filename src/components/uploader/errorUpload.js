@@ -1,14 +1,29 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 
-const ErrorUpload = styled.div`
+const ModalBg = styled.div`
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
   display: flex;
-  flex-direction: column;
-  width: 80vw;
-  margin: 0 auto;
-  min-height: 200px;
   align-items: center;
   justify-content: center;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 9999;
+`;
+
+const ErrorUpload = styled.div`
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+    margin: 0 auto;
+    min-height: 200px;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+}
 `;
 
 const ButtonReset = styled.button`
@@ -24,12 +39,14 @@ const ButtonReset = styled.button`
 class ErrorUploadWrapper extends Component {
   render() {
     return (
-      <ErrorUpload>
-        {this.props.text}
-        <ButtonReset onClick={e => this.props.onClick(e)}>
-          {this.props.buttonText}
-        </ButtonReset>
-      </ErrorUpload>
+      <ModalBg>
+        <ErrorUpload>
+          {this.props.text}
+          <ButtonReset onClick={e => this.props.onClick(e)}>
+            {this.props.buttonText}
+          </ButtonReset>
+        </ErrorUpload>
+      </ModalBg>
     );
   }
 }

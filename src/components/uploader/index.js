@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import Dropzone from 'react-dropzone';
-import styled, { ThemeProvider } from 'styled-components';
-import { theme } from '../../theme';
+import styled from 'styled-components';
+import ErrorUpload from './errorUpload';
+import { checkProperty } from '../../helpers';
 
 const UploaderContainer = styled.div`
   width: 80%;
@@ -26,27 +27,42 @@ const UploaderContainer = styled.div`
 
 class Uploader extends Component {
   render() {
+    const errorUploadConfig = {
+      buttonText: 'Riprova',
+      onClick: e => this.props.restartUpload(e)
+    };
     return (
-      <ThemeProvider theme={theme[this.props.themeColor]}>
-        <Dropzone onDrop={this.props.onDrop}>
-          {({ getRootProps, getInputProps, isDragActive }) => {
-            return (
-              <UploaderContainer
-                isDragActive={isDragActive}
-                inSidebar={this.props.inSidebar}
-                {...getRootProps()}
-              >
-                <input {...getInputProps()} />
-                {isDragActive ? (
-                  <p>Rilascia il file XML qui...</p>
-                ) : (
-                  <p>{this.props.text}</p>
-                )}
-              </UploaderContainer>
-            );
-          }}
-        </Dropzone>
-      </ThemeProvider>
+      <div>
+        {!this.props.fileXML && this.props.isXML && (
+          <Dropzone onDrop={this.props.onDrop}>
+            {({ getRootProps, getInputProps, isDragActive }) => {
+              return (
+                <UploaderContainer
+                  isDragActive={isDragActive}
+                  inSidebar={this.props.inSidebar}
+                  {...getRootProps()}
+                >
+                  <input {...getInputProps()} />
+                  {isDragActive ? (
+                    <p>Rilascia il file XML qui...</p>
+                  ) : (
+                    <p>{this.props.text}</p>
+                  )}
+                </UploaderContainer>
+              );
+            }}
+          </Dropzone>
+        )}
+        {!this.props.isXML && (
+          <ErrorUpload {...errorUploadConfig} text="Non è un file XML." />
+        )}
+        {this.props.fileXML && !checkProperty(this.props.fileXML) && (
+          <ErrorUpload
+            {...errorUploadConfig}
+            text="Il File XML non è una Fattura Elettronica regolare."
+          />
+        )}
+      </div>
     );
   }
 }
