@@ -55,6 +55,13 @@ const FormItem = styled.div`
     :focus {
       outline: none;
     }
+    :-webkit-autofill {
+      -webkit-box-shadow: 0 0 0px 1000px #fff inset;
+      :hover,
+      :focus {
+        -webkit-box-shadow: 0 0 0px 1000px #fff inset;
+      }
+    }
   }
   textarea {
     border: none;
@@ -68,9 +75,9 @@ const FormItem = styled.div`
     }
   }
   button {
-    color: ${props => props.theme.textColor};
-    border: 1px solid ${props => props.theme.buttonColor};
-    background: ${props => props.theme.buttonBg};
+    color: ${props => props.theme.secondaryColor};
+    border: 1px solid ${props => props.theme.secondaryColor};
+    background: ${props => props.theme.secondaryColorBg};
     border-radius: 4px;
     font-size: 16px;
     padding: 10px 50px;
@@ -78,9 +85,9 @@ const FormItem = styled.div`
     cursor: pointer;
     transition: all 0.3s ease-in-out;
     :hover {
-      background: ${props => props.theme.buttonColor};
-      border-color: #ccc;
-      color: ${props => props.theme.textColor};
+      background: ${props => props.theme.secondaryColor};
+      border-color: ${props => props.theme.secondaryColorBg};
+      color: ${props => props.theme.secondaryColorBg};
     }
   }
 `;

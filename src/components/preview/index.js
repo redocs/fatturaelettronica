@@ -39,22 +39,6 @@ const Col = styled.div`
 
 const ColMini = styled(Col)``;
 
-const Button = styled.button`
-  padding: ${props => (props.icon ? '3px 20px;' : '8px 20px')};
-  ${props => (props.icon ? 'font-size: 20px;' : '')}
-  border: 1px solid ${props => props.theme.buttonColor};
-  border-radius: 4px;
-  cursor: pointer;
-  text-transform: uppercase;
-  font-weight: bolder;
-  background: ${props => props.theme.buttonBg};
-
-  &:focus {
-    outline: none;
-    box-shadow: 0px 0px 0px 2px ${props => props.theme.buttonColor};
-  }
-`;
-
 const Pitem = styled.li`
   padding: 0;
   margin: 0 10px 5px;
