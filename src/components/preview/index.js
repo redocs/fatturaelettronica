@@ -5,14 +5,14 @@ import OrderBy from './orderby';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-  faTimesCircle,
+  faTimes,
   faCaretRight,
   faCaretLeft,
   faFileInvoice
 } from '@fortawesome/free-solid-svg-icons';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
-library.add(faTimesCircle);
+library.add(faTimes);
 library.add(faCaretRight);
 library.add(faCaretLeft);
 library.add(faFileInvoice);
@@ -24,7 +24,10 @@ const PreviewContainer = styled.ul`
 
 const Header = styled.div`
   display: flex;
-  margin: 6px;
+  margin: 6px 10px 10px;
+  border-bottom: 1px solid ${props => props.theme.sidebarBorderColor};
+  height: 70px;
+  align-items: center;
 `;
 
 const Col = styled.div`
@@ -53,11 +56,12 @@ const Button = styled.button`
 `;
 
 const Pitem = styled.li`
-  margin: 0;
-  padding: 5px;
-  border: 1px solid ${props => props.theme.sidebarColor};
-  margin: -1px -1px 0;
-  line-height: 33px;
+  padding: 0;
+  margin: 0 10px 5px;
+  border: 1px solid ${props => props.theme.sidebarBorderColor};
+  border-radius: 4px;
+  line-height: 26px;
+  font-size: 14px;
   display: flex;
   justify-content: space-between;
   background: ${props =>
@@ -69,19 +73,27 @@ const PitemSpan = styled.span`
   justify-content: ${props => props.justifyContent};
   width: ${props => props.width};
   text-align: ${props => props.textAlign};
+  padding: 5px 10px;
   ${props => (props.flex ? 'flex: ' + props.flex : '')}
   ${props => (props.clickable ? 'cursor: pointer;' : '')}
 `;
 
-const PitemSpanValue = styled(PitemSpan)``;
+const PitemSpanValue = styled(PitemSpan)`
+  padding: 0;
+`;
 
 const PitemSpanName = styled(PitemSpan)`
+  padding: 0;
   width: 150px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   display: inline-block;
   flex: none;
+`;
+
+const PitemSpanDoc = styled(PitemSpan)`
+  padding: 0;
 `;
 
 const PitemSpanMini = styled(PitemSpan)``;
@@ -110,14 +122,21 @@ const PitemButton = styled.span`
   text-align: ${props => props.textAlign};
   ${props => (props.flex ? 'flex: ' + props.flex : '')}
   align-items: center;
-  margin-left: 4px;
+  margin-left: 0;
   cursor: pointer;
+  width: 35px;
+  border-left: 1px solid ${props => props.theme.sidebarBorderColor};
+  transition: color 0.3s ease-in-out;
+
+  :hover {
+    color: #b70000;
+  }
 `;
 
 const TitleH2 = styled.h2`
   margin: 0;
   padding: 0;
-  font-size: 20px;
+  font-size: 16px;
   text-transform: uppercase;
   color: ${props => props.theme.sidebarColor};
 `;
@@ -195,7 +214,6 @@ class PreviewItem extends Component {
         {...itemSpanConfig}
         onClick={e => this.loadFile(file)}
       >
-        {/* {console.log(file)} */}
         <PitemSpanName {...itemSpanConfig}>{file.name}</PitemSpanName>
         {file.valueTot !== 0 && (
           <PitemSpanValue
@@ -206,9 +224,9 @@ class PreviewItem extends Component {
             {file.valueTot} {file.valueCurrency}
           </PitemSpanValue>
         )}
-        <PitemSpan textAlign="right" width="auto" justifyContent="flex-end">
+        <PitemSpanDoc textAlign="right" width="auto" justifyContent="flex-end">
           {file.dateDoc}
-        </PitemSpan>
+        </PitemSpanDoc>
       </PitemSpanMini>
     );
   }
@@ -265,21 +283,19 @@ class Preview extends Component {
     return (
       <PreviewDiv mini={this.props.isMini}>
         <Header>
-          <Col justifyContent="flex-start">
+          {/* <Col justifyContent="flex-start">
             <Button icon onClick={e => this.toggleSidebar(e)}>
               <FontAwesomeIcon
                 icon={this.props.isMini ? 'caret-left' : 'caret-right'}
               />
             </Button>
-          </Col>
-          <ColMini flex="2" justifyContent="center">
+          </Col> */}
+          <ColMini flex="2" justifyContent="flex-start">
             <TitleH2>Lista Fatture</TitleH2>
           </ColMini>
-          <ColMini justifyContent="flex-end">
+          {/* <ColMini justifyContent="flex-end">
             <Button onClick={e => this.resetStore(e)}>Reset</Button>
-          </ColMini>
-        </Header>
-        <Header>
+          </ColMini> */}
           <ColMini justifyContent="flex-end">
             <OrderBy
               themeColor={this.props.themeColor}
@@ -321,7 +337,7 @@ class Preview extends Component {
                             justifyContent="center"
                             onClick={e => this.onClickRemove(i)}
                           >
-                            <FontAwesomeIcon icon="times-circle" />
+                            <FontAwesomeIcon icon="times" />
                           </PitemButton>
                         </Pitem>
                       )}

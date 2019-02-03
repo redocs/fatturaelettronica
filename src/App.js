@@ -1,83 +1,17 @@
 import React, { Component } from 'react';
 import Header from './components/header';
-import Viewer from './components/viewer';
-import Uploader from './components/uploader';
-import Preview from './components/preview';
 import { checkProperty, returnObject, getParamUrl } from './helpers';
-import styled, { ThemeProvider } from 'styled-components';
+import { ThemeProvider } from 'styled-components';
 import './App.css';
 import ls from 'local-storage';
 import { theme } from './theme';
 import { BrowserRouter as Router, Route, NavLink } from 'react-router-dom';
-import { About } from './pages/about';
-
-const FlexContainer = styled.div`
-  width: 100%;
-  display: flex;
-`;
-
-const Col = styled.div`
-  flex: ${props => props.flex};
-`;
-
-const ColPreviewer = styled(Col)`
-  max-width: ${props => (props.mini ? '100px' : '449px')}
-  padding: 0;
-  margin: 10px 10px 10px 5px;
-  background: ${props => props.theme.sidebarBg};
-  border: 1px solid ${props => props.theme.sidebarBorderColor};
-  color: #fff;
-  border-radius: 4px;
-  @media print {
-    display: none;
-  }
-`;
-
-const MenuHeader = styled.nav`
-  list-style-type: none;
-  display: flex;
-  margin: 0;
-  padding: 6px 10px;
-  background: #333;
-  color: #fff;
-
-  a {
-    color: #fff;
-    padding: 1px 10px 2px;
-    display: inline-block;
-    text-decoration: none;
-    text-transform: uppercase;
-    position: relative;
-    border: 1px solid #fff;
-    margin-left: -1px;
-    transition: all 0.3s ease-in-out;
-    :hover {
-      background: rgba(255, 255, 255, 0.2);
-    }
-    :before {
-      content: '';
-      position: absolute;
-      width: 5px;
-      height: 5px;
-      background: #fff;
-      top: 6px;
-      left: -7px;
-      border-radius: 99em;
-      border: 4px solid #333;
-    }
-  }
-  a:first-child:before {
-    display: none;
-  }
-  a.active {
-    background: #fff;
-    color: #333;
-  }
-`;
+import { About, Contact } from './pages';
+import Homepage from './pages/homepage';
 
 var xml2js = require('xml2js');
 
-class Homepage extends Component {
+class App extends Component {
   constructor(props) {
     super(props);
 
@@ -105,7 +39,6 @@ class Homepage extends Component {
   onRemoveFile = index => {
     let oldFiles = this.state.files;
     oldFiles.splice(index, 1);
-    //console.log('removed file', newFiles);
     ls.set('files', oldFiles);
     this.setState({
       files: ls.get('files') || []
@@ -113,6 +46,11 @@ class Homepage extends Component {
   };
   onSelectOrderBy = type => {
     let arrayFiles = this.state.files;
+    if (type === 'upload') {
+      arrayFiles.sort(function(a, b) {
+        return a.dateUpload - b.dateUpload;
+      });
+    }
     if (type === 'dateASC') {
       arrayFiles.sort(function(a, b) {
         return a.dateDocTimestamp - b.dateDocTimestamp;
@@ -125,8 +63,8 @@ class Homepage extends Component {
     }
     if (type === 'name') {
       arrayFiles.sort(function(a, b) {
-        var nameA = a.name.toUpperCase(); // ignora maiuscole e minuscole
-        var nameB = b.name.toUpperCase(); // ignora maiuscole e minuscole
+        var nameA = a.name.toUpperCase();
+        var nameB = b.name.toUpperCase();
         if (nameA < nameB) {
           return -1;
         }
@@ -134,7 +72,6 @@ class Homepage extends Component {
           return 1;
         }
 
-        // i nomi devono essere uguali
         return 0;
       });
     }
@@ -154,7 +91,6 @@ class Homepage extends Component {
     });
   };
   onSelectedFile = file => {
-    //console.log('onSelectedFile');
     this.setState({
       file: file
     });
@@ -170,7 +106,6 @@ class Homepage extends Component {
       toggleSidebar: !this.state.toggleSidebar
     });
   };
-
   onDragEnd = files => {
     ls.set('files', files);
 
@@ -178,7 +113,6 @@ class Homepage extends Component {
       files: ls.get('files') || []
     });
   };
-
   onDrop = acceptedFiles => {
     let i = 0;
     acceptedFiles.forEach(file => {
@@ -214,62 +148,6 @@ class Homepage extends Component {
       reader.readAsBinaryString(file);
     });
   };
-  render() {
-    const fileXML = this.state.file.file;
-    const isCorrectFile = fileXML && checkProperty(fileXML);
-
-    const newVersion = getParamUrl() === 'v2' ? true : false;
-    const previewActive = newVersion ? newVersion : true;
-    return (
-      <FlexContainer>
-        <Col flex={2}>
-          {!this.state.fileLoaded && (
-            <Uploader
-              isXML={this.state.isXML}
-              fileXML={fileXML}
-              themeColor={this.state.themeColor}
-              text="Rilascia il file XML qui o clicca per caricare il file dal tuo computer"
-              onDrop={e => this.onDrop(e)}
-              restartUpload={e => this.restartUpload(e)}
-            />
-          )}
-          {isCorrectFile && <Viewer file={fileXML} />}
-        </Col>
-        {this.state.files && previewActive && (
-          <ColPreviewer mini={this.state.toggleSidebar} flex={1}>
-            <Preview
-              themeColor={this.state.themeColor}
-              onSelectOrderBy={this.onSelectOrderBy}
-              onResetStore={this.onResetStore}
-              onSelectedFile={this.onSelectedFile}
-              onRemoveFile={this.onRemoveFile}
-              fileActive={this.state.file.fileID}
-              files={this.state.files}
-              onToggleSidebar={this.onToggleSidebar}
-              isMini={this.state.toggleSidebar}
-              onDragEnd={this.onDragEnd}
-              onDrop={this.onDrop}
-            />
-          </ColPreviewer>
-        )}
-      </FlexContainer>
-    );
-  }
-}
-
-class App extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      file: '',
-      files: ls.get('files') || null,
-      isXML: true,
-      toggleSidebar: false,
-      themeColor: ls.get('theme') || 'theme1',
-      fileLoaded: false
-    };
-  }
 
   restartUpload = () => {
     this.setState({
@@ -289,17 +167,22 @@ class App extends Component {
   };
   render() {
     const fileXML = this.state.file.file;
-    const isCorrectFile = fileXML && checkProperty(fileXML);
-
+    const isCorrectFile = !!fileXML && checkProperty(fileXML);
+    console.log(this.state.file);
     const newVersion = getParamUrl() === 'v2' ? true : false;
     const previewActive = newVersion ? newVersion : true;
 
     const pages = [
-      { id: 1, slug: 'home', title: 'Home' },
+      { id: 1, slug: 'visualizza', title: 'Visualizza' },
       {
         id: 2,
         slug: 'visualizzare-fatture-elettroniche',
-        title: 'Visualizzare Fatture Elettroniche'
+        title: 'Come funziona'
+      },
+      {
+        id: 3,
+        slug: 'contattaci',
+        title: 'Contatti'
       }
     ];
     return (
@@ -312,8 +195,7 @@ class App extends Component {
               isCorrectFile={isCorrectFile}
               onClick={e => this.restartUpload(e)}
               onChangeTheme={e => this.changeTheme(e)}
-            />
-            <MenuHeader>
+            >
               {pages.map(page => (
                 <NavLink
                   key={page.id}
@@ -323,13 +205,31 @@ class App extends Component {
                   {page.title}
                 </NavLink>
               ))}
-            </MenuHeader>
-            <Route exact path="/home" component={Homepage} />
+            </Header>
             <Route
+              path={`/${pages[0].slug}`}
               exact
-              path="/visualizzare-fatture-elettroniche"
-              component={About}
+              render={props => (
+                <Homepage
+                  {...props}
+                  onDrop={e => this.onDrop(e)}
+                  fileActive={this.state.file}
+                  isXML={this.state.isXML}
+                  files={this.state.files}
+                  fileLoaded={this.state.fileLoaded}
+                  themeColor={this.props.themeColor}
+                  onSelectOrderBy={this.onSelectOrderBy}
+                  onResetStore={this.onResetStore}
+                  onSelectedFile={this.onSelectedFile}
+                  onRemoveFile={this.onRemoveFile}
+                  onToggleSidebar={this.onToggleSidebar}
+                  onDragEnd={e => this.onDragEnd(e)}
+                  restartUpload={this.restartUpload}
+                />
+              )}
             />
+            <Route exact path={`/${pages[1].slug}`} component={About} />
+            <Route exact path={`/${pages[2].slug}`} component={Contact} />
           </div>
         </ThemeProvider>
       </Router>

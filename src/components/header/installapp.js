@@ -11,8 +11,8 @@ const Button = styled.button`
   cursor: pointer;
   text-transform: uppercase;
   font-weight: bolder;
-  margin: 0 10px 0 0;
-  min-height: 15vh;
+  margin: 0 1px 0 0;
+  min-height: ${props => props.theme.configTheme.headerHeight};
 `;
 
 class InstallApp extends Component {

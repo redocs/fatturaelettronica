@@ -2,16 +2,12 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCaretDown } from '@fortawesome/free-solid-svg-icons';
+import { faAngleDown } from '@fortawesome/free-solid-svg-icons';
 
-library.add(faCaretDown);
+library.add(faAngleDown);
 
 const OrderByContainer = styled.div`
   position: relative;
-  ${props =>
-    props.open
-      ? 'filter: drop-shadow(0px 2px 2px ' + props.theme.buttonColor + ');'
-      : ''}
 `;
 const OrderBy = styled.div`
   position: absolute;
@@ -19,76 +15,68 @@ const OrderBy = styled.div`
   z-index: 1000;
   display: none;
   min-width: 10rem;
-  padding: 5px 0;
-  margin: -1px 0 0;
-  font-size: 11px;
+  padding: 0;
+  margin: 2px;
+  font-size: 14px;
   color: ${props => props.theme.buttonColor};
   text-align: left;
   list-style: none;
   background-color: ${props => props.theme.buttonBg};
   background-clip: padding-box;
-  border: 1px solid ${props => props.theme.buttonColor};
-  border-radius: 4px;
+  border: 1px solid ${props => props.theme.sidebarBorderColor};
+  border-radius: 0;
   border-top-right-radius: 0;
   right: 0px;
-  will-change: transform;
   display: ${props => (props.open ? 'block' : 'none')};
-  text-transform: uppercase;
 `;
 const OrderItem = styled.div`
   display: block;
   width: auto;
   padding: 10px 0;
   clear: both;
-  font-weight: bolder;
+  font-weight: normal;
   color: ${props => props.theme.buttonColor};
   text-align: center;
   white-space: nowrap;
   background-color: transparent;
   border: 0;
   cursor: pointer;
-  border-bottom: 1px solid ${props => props.theme.buttonColor};
-  font-family: 'Archivo', -apple-system, BlinkMacSystemFont, 'Segoe UI',
-    'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans',
-    'Helvetica Neue', sans-serif;
-  font-weight: normal;
+  border-bottom: 1px solid ${props => props.theme.sidebarBorderColor};
 
   &:last-child {
     border: none;
   }
 `;
 
-const Button = styled.button`
-  padding: ${props => (props.icon ? '3px 20px;' : '8px 20px')};
+const Button = styled.div`
+  padding: 0;
   ${props => (props.icon ? 'font-size: 20px;' : '')}
-  background-color: ${props => props.theme.buttonBg};
-  border: 1px solid ${props => props.theme.buttonColor};
-  border-radius: 4px;
+  background: #fff;
+  border: none;
   cursor: pointer;
-  text-transform: uppercase;
-  font-weight: bolder;
-
-  ${props =>
-    props.open
-      ? 'border-bottom-left-radius: 0;border-bottom-right-radius: 0;border-bottom: none;margin-bottom:1px;'
-      : ''}
-
+  white-space: nowrap;
   &:focus {
     outline: none;
-    box-shadow: ${props =>
-      props.open ? 'none' : '0px 0px 0px 2px ' + props.theme.buttonColor};
   }
 
   > span {
-    margin-left: 4px;
+    margin-left: 5px;
   }
+`;
+
+const SpanOrder = styled.span`
+  color: #286552;
 `;
 
 class OrderByComponent extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      open: false
+      open: false,
+      selected: {
+        value: 'upload',
+        desc: 'Data Caricamento'
+      }
     };
   }
   toggleDropdown = () => {
@@ -96,33 +84,63 @@ class OrderByComponent extends Component {
       open: !this.state.open
     });
   };
-  orderBy = type => {
+  orderBy = (type, orderObj) => {
     this.props.onSelectOrderBy(type);
+    let filterType = orderObj.find(item => {
+      return item.value === type;
+    });
     this.setState({
-      open: false
+      open: false,
+      selected: filterType
     });
   };
   render() {
+    const orderObj = [
+      {
+        value: 'upload',
+        desc: 'Data Caricamento'
+      },
+      {
+        value: 'name',
+        desc: 'Nome'
+      },
+      {
+        value: 'dateASC',
+        desc: 'Data ASC'
+      },
+      {
+        value: 'dateDESC',
+        desc: 'Data DESC'
+      },
+      {
+        value: 'prezzoASC',
+        desc: 'Prezzo ASC'
+      },
+      {
+        value: 'prezzoDESC',
+        desc: 'Prezzo DESC'
+      }
+    ];
+    const { open, selected } = this.state;
     return (
-      <OrderByContainer open={this.state.open}>
-        <Button open={this.state.open} onClick={e => this.toggleDropdown(e)}>
-          Ordina Per
-          <span>
-            <FontAwesomeIcon size="lg" icon="caret-down" />
-          </span>
+      <OrderByContainer open={open}>
+        <Button open={open} onClick={e => this.toggleDropdown(e)}>
+          Ordina Per: <SpanOrder>{selected.desc}</SpanOrder>
+          <SpanOrder>
+            <FontAwesomeIcon size="sm" icon="angle-down" />
+          </SpanOrder>
         </Button>
-        <OrderBy open={this.state.open}>
-          <OrderItem onClick={e => this.orderBy('name')}>Nome</OrderItem>
-          <OrderItem onClick={e => this.orderBy('dateASC')}>Data ASC</OrderItem>
-          <OrderItem onClick={e => this.orderBy('dateDESC')}>
-            Data DESC
-          </OrderItem>
-          <OrderItem onClick={e => this.orderBy('prezzoASC')}>
-            Prezzo ASC
-          </OrderItem>
-          <OrderItem onClick={e => this.orderBy('prezzoDESC')}>
-            Prezzo DESC
-          </OrderItem>
+        <OrderBy open={open}>
+          {orderObj.map((order, i) => {
+            return (
+              <OrderItem
+                key={i}
+                onClick={e => this.orderBy(order.value, orderObj)}
+              >
+                {order.desc}
+              </OrderItem>
+            );
+          })}
         </OrderBy>
       </OrderByContainer>
     );

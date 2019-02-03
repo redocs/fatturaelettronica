@@ -1,18 +1,20 @@
-export const theme1 = {
-    textColor: "#FFFFFF",
+let theme1 = {
+    textColor: "#000000",
     backgroundColor: "#FFFFFF",
-    headerBg: "#585858",
-    sidebarBg: "#585858",
-    sidebarColor: "#FFFFFF",
-    sidebarBorderColor: "#FFFFFF",
-    selectedColor: "#3a3a3a",
+    headerBg: "#F4F4F4",
+    sidebarBg: "#FFFFFF",
+    sidebarColor: "#000000",
+    sidebarBorderColor: "#e3e3e3",
+    selectedColor: "#F4F4F4",
     buttonBg: "#FFFFFF",
-    buttonColor: "#313131",
-    uploaderColor: "#313131",
-    uploaderBorderColor: "#a7a7a7"
+    buttonColor: "#000000",
+    uploaderColor: "#000000",
+    uploaderBorderColor: "#a7a7a7",
+    secondaryColor: "#286552",
+    secondaryColorBg: "#60EEC2"
 };
 
-export const theme2 = {
+let theme2 = {
     textColor: "#313131",
     backgroundColor: "#F5F5F5",
     headerBg: "#585858",
@@ -23,8 +25,17 @@ export const theme2 = {
     buttonBg: "#FFFFFF",
     buttonColor: "#313131",
     uploaderColor: "#313131",
-    uploaderBorderColor: "#a7a7a7"
+    uploaderBorderColor: "#a7a7a7",
+    secondaryColor: "#60EEC2",
+    secondaryColorBg: "#286552"
 }
+
+const configTheme = {
+    headerHeight: "70px"
+}
+
+theme1.configTheme = configTheme;
+theme2.configTheme = configTheme;
 
 export const theme = {
     theme1,
