@@ -5,9 +5,10 @@ import ErrorUpload from './errorUpload';
 import { checkProperty } from '../../helpers';
 
 const UploaderContainer = styled.div`
-  width: 80%;
+  box-sizing: border-box;
+  width: calc(100% - 20px);
   min-height: ${props => (props.inSidebar ? '44px' : '300px')};
-  background: ${props => props.theme.backgroundColor};
+  background: ${props => props.theme.selectedColor};
   border-radius: 4px;
   border: 2px dashed ${props => props.theme.uploaderBorderColor};
   color: ${props => props.theme.uploaderColor};
@@ -16,12 +17,18 @@ const UploaderContainer = styled.div`
   align-items: center;
   justify-content: center;
   transition: box-shadow 0.2s ease-in-out;
+  font-size: 14px;
+  box-shadow: 0px 0px 0px 4px ${props => props.theme.selectedColor};
   ${props =>
     props.isDragActive
-      ? 'box-shadow: inset 0px 0px 1rem 0px ' + props.theme.uploaderBorderColor
+      ? 'box-shadow: 0px 0px 4px 4px ' + props.theme.selectedColor
       : ''};
   @media (max-width: 700px) {
     width: 80vw;
+  }
+
+  p {
+    margin: 0;
   }
 `;
 

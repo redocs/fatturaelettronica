@@ -137,9 +137,9 @@ export const Contact = () => (
           </p>
         </div>
       </Col>
-      <Col flex="1">
+      {/* <Col flex="1">
         <ContactForm />
-      </Col>
+      </Col> */}
     </FlexContainer>
   </Content>
 );

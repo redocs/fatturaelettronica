@@ -36,7 +36,6 @@ class InstallApp extends Component {
         successfullyInstalled: true
       });
     } else {
-      console.log('mi fermo qui?');
       window.addEventListener('beforeinstallprompt', e => {
         console.log('beforeinstallprompt has fired', e);
         // Prevent Chrome 67 and earlier from automatically showing the prompt
@@ -84,7 +83,7 @@ class InstallApp extends Component {
       !this.state.successfullyInstalled &&
       !this.state.acceptedInstall &&
       !this.state.declinedInstall;
-    console.log('Should show add button', shouldShow);
+    //console.log('Should show add button', shouldShow);
     return shouldShow;
   }
   //   openWindowOrTab(url = window.location.href) {
@@ -94,7 +93,7 @@ class InstallApp extends Component {
     return (
       <InstallAppContainer>
         {this.shouldShowAddButton() && (
-          <Button onClick={this.addToHome}>Add to Home Screen</Button>
+          <Button onClick={this.addToHome}>Scarica la APP</Button>
         )}
       </InstallAppContainer>
     );

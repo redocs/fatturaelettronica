@@ -142,7 +142,6 @@ class Header extends Component {
           <NavContainer>{this.props.children}</NavContainer>
         </Col>
         <Col justifyContent="flex-end" flex={1}>
-          <Installapp />
           {this.props.isCorrectFile && !this.props.previewActive && (
             <Button onClick={e => this.props.onClick(e)}>RESTART</Button>
           )}
@@ -154,6 +153,7 @@ class Header extends Component {
               </span>
             </ButtonPrint>
           )}
+          <Installapp />
           {/* <Button onClick={e => this.props.onChangeTheme(e)}>
             CAMBIA TEMA
           </Button> */}

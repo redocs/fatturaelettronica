@@ -12,7 +12,7 @@ const ViewerDiv = styled.div`
 `;
 const ViewerContainer = styled.div`
   padding: 10px;
-  margin: 10px 5px 10px 10px;
+  margin: 10px;
   background: #fff;
   @media print {
     box-shadow: none;

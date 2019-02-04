@@ -168,7 +168,7 @@ class App extends Component {
   render() {
     const fileXML = this.state.file.file;
     const isCorrectFile = !!fileXML && checkProperty(fileXML);
-    console.log(this.state.file);
+    //console.log(this.state.file);
     const newVersion = getParamUrl() === 'v2' ? true : false;
     const previewActive = newVersion ? newVersion : true;
 
@@ -185,10 +185,13 @@ class App extends Component {
         title: 'Contatti'
       }
     ];
+    //let { from } = { from: { pathname: '/' } };
+    //if (redirectToReferrer) return <Redirect to={from} />;
     return (
       <Router>
         <ThemeProvider theme={theme[this.state.themeColor]}>
           <div className="App">
+            {/* {console.log(this.props.location.state)} */}
             <Header
               themeColor={this.state.themeColor}
               previewActive={previewActive}
