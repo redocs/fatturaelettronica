@@ -117,6 +117,14 @@ export const About = () => (
         permette di caricare questi file XML della Fattura Elettronica e di
         visualizzarli come PDF.
       </p>
+      <h3>Converti file XML o P7M in Fatture Elettroniche</h3>
+      <p>
+        Attraverso questo servizio puoi convertire i file XML o P7M in Fatture
+        Elettroniche visualizzabili come PDF. i File .p7m sono inviati
+        attraverso la Posta Certificata e sono <em>firmati</em> con la Firma
+        Digitale. Sono praticamente illeggibili ma questo servizio vi permetterà
+        di trasformarli in PDF e stamparli.
+      </p>
     </div>
   </Content>
 );
