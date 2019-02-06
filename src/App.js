@@ -1,6 +1,11 @@
 import React, { Component } from 'react';
 import Header from './components/header';
-import { checkProperty, returnObject, getParamUrl } from './helpers';
+import {
+  checkProperty,
+  returnObject,
+  getParamUrl,
+  convertP7m
+} from './helpers';
 import { ThemeProvider } from 'styled-components';
 import './App.css';
 import ls from 'local-storage';
@@ -113,29 +118,43 @@ class App extends Component {
       files: ls.get('files') || []
     });
   };
+  convertXML = (i, xmlFile) => {
+    let resultXML = this.parseXML(xmlFile);
+    resultXML = returnObject(resultXML);
+    if (!resultXML) {
+      this.setState({
+        isXML: false
+      });
+      return false;
+    }
+    resultXML.dateUpload = Math.floor(Date.now() / 1000);
+    resultXML.fileID =
+      resultXML.dateDocTimestamp + '-' + resultXML.dateUpload + '-' + i;
+    i++;
+    let currentFiles = this.state.files ? this.state.files.slice(0) : [];
+    let newCurrentFiles = [...currentFiles, resultXML];
+    ls.set('files', newCurrentFiles);
+    this.setState({
+      file: resultXML,
+      files: ls.get('files') || [],
+      isXML: true,
+      fileLoaded: true
+    });
+  };
   onDrop = acceptedFiles => {
     let i = 0;
     acceptedFiles.forEach(file => {
       const reader = new FileReader();
       reader.onload = () => {
-        if (file.type === 'text/xml') {
+        console.log(file.type);
+        if (file.type === 'application/pkcs7-mime') {
+          const fileResult = reader.result;
+          const newXml = convertP7m(fileResult);
+          this.convertXML(i, newXml);
+        } else if (file.type === 'text/xml') {
           let fileResult = reader.result;
           fileResult = fileResult.replace(/[ï»¿]/g, '');
-          let resultXML = this.parseXML(fileResult);
-          resultXML = returnObject(resultXML);
-          resultXML.dateUpload = Math.floor(Date.now() / 1000);
-          resultXML.fileID =
-            resultXML.dateDocTimestamp + '-' + resultXML.dateUpload + '-' + i;
-          i++;
-          let currentFiles = this.state.files ? this.state.files.slice(0) : [];
-          let newCurrentFiles = [...currentFiles, resultXML];
-          ls.set('files', newCurrentFiles);
-          this.setState({
-            file: resultXML,
-            files: ls.get('files') || [],
-            isXML: true,
-            fileLoaded: true
-          });
+          this.convertXML(i, fileResult);
         } else {
           this.setState({
             isXML: false
@@ -167,6 +186,7 @@ class App extends Component {
   };
   render() {
     const fileXML = this.state.file.file;
+    //console.log(fileXML);
     const isCorrectFile = !!fileXML && checkProperty(fileXML);
     //console.log(this.state.file);
     const newVersion = getParamUrl() === 'v2' ? true : false;

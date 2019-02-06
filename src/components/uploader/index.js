@@ -61,7 +61,10 @@ class Uploader extends Component {
           </Dropzone>
         )}
         {!this.props.isXML && (
-          <ErrorUpload {...errorUploadConfig} text="Non è un file XML." />
+          <ErrorUpload
+            {...errorUploadConfig}
+            text="Non è un file XML regolare."
+          />
         )}
         {this.props.fileXML && !checkProperty(this.props.fileXML) && (
           <ErrorUpload

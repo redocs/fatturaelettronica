@@ -1,21 +1,11 @@
 export function checkProperty(xml) {
-  return (
-    xml.hasOwnProperty('P:FatturaElettronica') ||
-    xml.hasOwnProperty('p:FatturaElettronica') ||
-    xml.hasOwnProperty('FatturaElettronica')
-  );
+  var prop = Object.keys(xml);
+  return prop.toString().includes("FatturaElettronica")
 }
 
 export function selectProperty(xml) {
-  if (xml.hasOwnProperty('P:FatturaElettronica')) {
-    return 'P:FatturaElettronica';
-  }
-  if (xml.hasOwnProperty('p:FatturaElettronica')) {
-    return 'p:FatturaElettronica';
-  }
-  if (xml.hasOwnProperty('FatturaElettronica')) {
-    return 'FatturaElettronica';
-  }
+  var prop = Object.keys(xml);
+  return prop.toString();
 }
 
 export function correctData(data) {
@@ -40,14 +30,35 @@ export function selectValuta(valuta) {
   return valutaDesc[valuta];
 }
 
+export function retrieveDenominazione(anagrafica) {
+  if (typeof anagrafica.Denominazione !== 'undefined') {
+    return anagrafica.Denominazione.toString()
+  }
+  let denominazione;
+  if (typeof anagrafica.Nome !== 'undefined') {
+    denominazione = anagrafica.Nome.toString();
+  }
+  if (typeof anagrafica.Cognome !== 'undefined') {
+    denominazione += ' ' + anagrafica.Cognome.toString();
+  }
+  return denominazione;
+}
+
+export function convertP7m(file) {
+  return file.match(/<\?xml[\s\S]*?FatturaElettronica>/gm).toString();
+}
+
 export function returnObject(file) {
+  if (!checkProperty(file)) {
+    return false;
+  };
   const fattProperty = selectProperty(file);
   const fatturaBody = file[fattProperty].FatturaElettronicaBody[0];
   const fatturaHeader = file[fattProperty].FatturaElettronicaHeader;
   const cedente = fatturaHeader[0].CedentePrestatore[0];
   const datiDocumento = fatturaBody.DatiGenerali[0].DatiGeneraliDocumento[0];
   const dateDoc = correctData(datiDocumento.Data);
-  const name = cedente.DatiAnagrafici[0].Anagrafica[0].Denominazione.toString();
+  const name = retrieveDenominazione(cedente.DatiAnagrafici[0].Anagrafica[0]);
   const dateDocTimestamp = dateToTimestamp(dateDoc);
   const valueTot = datiDocumento.ImportoTotaleDocumento ?
     parseFloat(datiDocumento.ImportoTotaleDocumento.toString()) :
