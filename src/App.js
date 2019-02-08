@@ -13,6 +13,7 @@ import { theme } from './theme';
 import { BrowserRouter as Router, Route, NavLink } from 'react-router-dom';
 import { About, Contact } from './pages';
 import Homepage from './pages/homepage';
+import ReloadApp from './components/reload';
 
 var xml2js = require('xml2js');
 
@@ -253,6 +254,7 @@ class App extends Component {
             />
             <Route exact path={`/${pages[1].slug}`} component={About} />
             <Route exact path={`/${pages[2].slug}`} component={Contact} />
+            <ReloadApp />
           </div>
         </ThemeProvider>
       </Router>
