@@ -38,6 +38,9 @@ class ModalitaPagamento extends Component {
   render() {
     const datiPagamento = this.props.datiPagamento;
     const valuta = this.props.valuta;
+    const banca = datiPagamento.DettaglioPagamento[0].IstitutoFinanziario;
+    const IBAN = datiPagamento.DettaglioPagamento[0].IBAN;
+    const BIC = datiPagamento.DettaglioPagamento[0].BIC;
     //const datiPagamento = fatturaBody.DatiPagamento[0];
     const modalitaPagamento =
       datiPagamento.DettaglioPagamento[0].ModalitaPagamento;
@@ -90,6 +93,13 @@ class ModalitaPagamento extends Component {
             {modalitPagamentoDesc[modalitaPagamento]}
           </li>
           <li>Pagamento: {condizioniPagamentoDesc[condizioniPagamento]}</li>
+          {banca && <li>Banca: {banca}</li>}
+          {IBAN && (
+            <li>
+              IBAN: <strong>{IBAN}</strong>
+            </li>
+          )}
+          {BIC && <li>BIC: {BIC}</li>}
           <Table>
             <Thead>
               <tr>
