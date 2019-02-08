@@ -59,23 +59,25 @@ function showRefreshUI(registration) {
 
   // This demo creates and injects a button.
 
-  var button = document.createElement('button');
-  button.style.position = 'absolute';
-  button.style.bottom = '24px';
-  button.style.left = '24px';
-  button.textContent = 'This site has updated. Please click to see changes.';
+  var notification = document.createElement('div');
+  //notification.style.position = 'absolute';
+  notification.classList.add("notify_upload", "notify_view");
+  // notification.style.bottom = '24px';
+  // notification.style.right = '24px';
+  notification.textContent = 'New Version Available! Click to Reload';
 
-  button.addEventListener('click', function () {
+  notification.addEventListener('click', function () {
     if (!registration.waiting) {
       return;
     }
 
-    button.disabled = true;
+    //notification.disabled = true;
+    notification.classList.remove("notify_view");
 
     registration.waiting.postMessage('skipWaiting');
   });
 
-  document.body.appendChild(button);
+  document.body.appendChild(notification);
 };
 
 function onNewServiceWorker(registration, callback) {
