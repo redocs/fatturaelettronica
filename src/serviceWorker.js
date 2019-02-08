@@ -55,23 +55,14 @@ export function register(config) {
 }
 
 function showRefreshUI(registration) {
-  // TODO: Display a toast or refresh UI.
-
-  // This demo creates and injects a button.
-
   var notification = document.createElement('div');
-  //notification.style.position = 'absolute';
   notification.classList.add("notify_upload", "notify_view");
-  // notification.style.bottom = '24px';
-  // notification.style.right = '24px';
   notification.textContent = 'New Version Available! Click to Reload';
 
   notification.addEventListener('click', function () {
     if (!registration.waiting) {
       return;
     }
-
-    //notification.disabled = true;
     notification.classList.remove("notify_view");
 
     registration.waiting.postMessage('skipWaiting');

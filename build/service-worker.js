@@ -29,6 +29,12 @@ workbox.precaching.suppressWarnings();
 workbox.precaching.precacheAndRoute(self.__precacheManifest, {});
 
 workbox.routing.registerNavigationRoute("/index.html", {
-  
-  blacklist: [/^\/_/,/\/[^\/]+\.[^\/]+$/],
+
+  blacklist: [/^\/_/, /\/[^\/]+\.[^\/]+$/],
+});
+
+self.addEventListener('message', function handleSkipWaiting(event) {
+  if (event.data === 'skipWaiting') {
+    self.skipWaiting();
+  }
 });
