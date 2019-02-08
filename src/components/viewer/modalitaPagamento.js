@@ -96,7 +96,7 @@ class ModalitaPagamento extends Component {
           {banca && <li>Banca: {banca}</li>}
           {IBAN && (
             <li>
-              IBAN Cambio qualcosa: <strong>{IBAN}</strong>
+              IBAN: <strong>{IBAN}</strong>
             </li>
           )}
           {BIC && <li>BIC: {BIC}</li>}

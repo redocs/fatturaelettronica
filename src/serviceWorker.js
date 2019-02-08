@@ -66,6 +66,7 @@ function showRefreshUI(registration) {
     notification.classList.remove("notify_view");
 
     registration.waiting.postMessage('skipWaiting');
+    window.location.reload();
   });
 
   document.body.appendChild(notification);
