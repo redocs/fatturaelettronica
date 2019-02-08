@@ -54,9 +54,56 @@ export function register(config) {
   }
 }
 
-// window.isUpdateAvailable = new Promise(function(resolve, reject) {
+function showRefreshUI(registration) {
+  // TODO: Display a toast or refresh UI.
 
-// });
+  // This demo creates and injects a button.
+
+  var button = document.createElement('button');
+  button.style.position = 'absolute';
+  button.style.bottom = '24px';
+  button.style.left = '24px';
+  button.textContent = 'This site has updated. Please click to see changes.';
+
+  button.addEventListener('click', function () {
+    if (!registration.waiting) {
+      // Just to ensure registration.waiting is available before
+      // calling postMessage()
+      return;
+    }
+
+    button.disabled = true;
+
+    registration.waiting.postMessage('skipWaiting');
+  });
+
+  document.body.appendChild(button);
+};
+
+function onNewServiceWorker(registration, callback) {
+  if (registration.waiting) {
+    // SW is waiting to activate. Can occur if multiple clients open and
+    // one of the clients is refreshed.
+    return callback();
+  }
+
+  function listenInstalledStateChange() {
+    registration.installing.addEventListener('statechange', function (event) {
+      if (event.target.state === 'installed') {
+        // A new service worker is available, inform the user
+        callback();
+      }
+    });
+  };
+
+  if (registration.installing) {
+    return listenInstalledStateChange();
+  }
+
+  // We are currently controlled so a new SW may be found...
+  // Add a listener in case a new SW is found,
+  registration.addEventListener('updatefound', listenInstalledStateChange);
+}
 
 function registerValidSW(swUrl, config) {
   navigator.serviceWorker
@@ -77,9 +124,20 @@ function registerValidSW(swUrl, config) {
                 'New content is available and will be used when all ' +
                 'tabs for this page are closed. See http://bit.ly/CRA-PWA.'
               );
-              const event = new Event("newContentAvailable");
-              window.dispatchEvent(event);
+              // When the user asks to refresh the UI, we'll need to reload the window
+              var preventDevToolsReloadLoop;
+              navigator.serviceWorker.addEventListener('controllerchange', function (event) {
+                // Ensure refresh is only called once.
+                // This works around a bug in "force update on reload".
+                if (preventDevToolsReloadLoop) return;
+                preventDevToolsReloadLoop = true;
+                console.log('Controller loaded');
+                window.location.reload();
+              });
 
+              onNewServiceWorker(registration, function () {
+                showRefreshUI(registration);
+              });
               // Execute callback
               if (config && config.onUpdate) {
                 config.onUpdate(registration);
