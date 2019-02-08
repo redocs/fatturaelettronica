@@ -67,8 +67,6 @@ function showRefreshUI(registration) {
 
   button.addEventListener('click', function () {
     if (!registration.waiting) {
-      // Just to ensure registration.waiting is available before
-      // calling postMessage()
       return;
     }
 
