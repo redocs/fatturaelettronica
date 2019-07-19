@@ -10,6 +10,8 @@
     "@fortawesome/react-fontawesome": "^0.1.4",
     "bloomer": "^0.6.5",
     "electron-packager": "^13.0.1",
+    "enzyme": "^3.9.0",
+    "enzyme-adapter-react-16": "^1.12.1",
     "gh-pages": "^2.0.1",
     "local-storage": "^1.4.2",
     "react": "^16.7.0",
